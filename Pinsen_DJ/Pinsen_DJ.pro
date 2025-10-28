@@ -14,6 +14,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    FormLogShow.cpp \
     MFormMotor.cpp \
     RFID/mRFID_Dialog.cpp \
     aboutsoftware.cpp \
@@ -41,6 +42,7 @@ SOURCES += \
     thread_ptmotor.cpp
 
 HEADERS += \
+    FormLogShow.h \
     Header_File.h \
     MFormMotor.h \
     RFID/mRFID_Dialog.h \
@@ -69,6 +71,7 @@ HEADERS += \
     thread_ptmotor.h
 
 FORMS += \
+    FormLogShow.ui \
     MFormMotor.ui \
     RFID/mRFID_Dialog.ui \
     aboutsoftware.ui \

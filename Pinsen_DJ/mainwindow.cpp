@@ -183,8 +183,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     mutualui = this;
 
-
-
+    NFormLogShow = FormLogShow::getInstance();
+    NFormLogShow->show();
+    NFormLogShow->addLog("主窗口","初始化");
 
 //    QGridLayout *lll = new QGridLayout;
 
@@ -432,6 +433,11 @@ void MainWindow::Class_Init()
     // 启动线程
 //    workerThread->start();
 
+
+
+        ShowUI_DataTimer = new QTimer(this);
+        connect(ShowUI_DataTimer,SIGNAL(timeout()),this,SLOT(Slot_ShowUI_Data()));
+        ShowUI_DataTimer->start(100);
 }
 
 void MainWindow::onSerialConnectRequested(const QString &portName, qint32 baudRate,QSerialPort::DataBits dataBits,QSerialPort::Parity parity,QSerialPort::StopBits stopBits)
@@ -6831,5 +6837,81 @@ void MainWindow::on_Btn_test2_clicked()
 {
 
     emit testRunMotor(ui->lineEdit->text());
+}
+
+/*
+* @description 界面数据显示槽函数
+* @param { } 无
+* @returns {void} 无
+* @date 2025-10-28 11:51:00
+* @author zh
+*/
+void MainWindow::Slot_ShowUI_Data()
+{
+    //PT电机
+    bool motor_pt_show_flag = true;
+    if(motor_pt_show_flag){
+
+    }
+
+
+
+    //LIN电机
+
+    //鼓风机
+
+    //温敏电阻
+
+    //其他
+
+
+}
+
+
+//#define FUNC_PT_ID      1
+//#define FUNC_LIN_ID     2
+//#define FUNC_BLO_ID     3
+//#define FUNC_THE_ID     4
+//#define FUNC_ANION_ID   5
+//#define FUNC_AQS_ID     6
+//#define RUNC_PM25_ID    7
+//#define RUNC_PTC_ID     8
+/*
+* @description 分功能界面数据显示
+* @param {uchar} _num 功能ID
+* @returns {void} 无
+* @date 2025-10-28 14:03:00
+* @author zh
+*/
+void MainWindow::showFuncUIData(uchar _num){
+    switch (_num) {
+        case FUNC_PT_ID:
+
+            break;
+        case FUNC_LIN_ID:
+
+            break;
+        case FUNC_BLO_ID:
+
+            break;
+        case FUNC_THE_ID:
+
+            break;
+        case FUNC_ANION_ID:
+
+            break;
+        case FUNC_AQS_ID:
+
+            break;
+        case RUNC_PM25_ID:
+
+            break;
+        case RUNC_PTC_ID:
+
+            break;
+        default:
+
+            break;
+    }
 }
 

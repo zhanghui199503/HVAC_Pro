@@ -1,10 +1,28 @@
 #include "thread_ptmotor.h"
 
+//thread_ptmotor *Nthread_ptmotor;
+thread_ptmotor* thread_ptmotor::Nthread_ptmotor = nullptr;
+
+QMutex thread_ptmotor::m_instanceMutex; // 关键：类外定义，分配内存
+
 thread_ptmotor::thread_ptmotor(QObject *parent)
     : QObject(parent)
     , threadState(false)
 {
     DelayTimer = new QTimer(this);
+}
+
+// 获取单例实例（线程安全的创建方式）
+thread_ptmotor* thread_ptmotor::getInstance()
+{
+    // 双重检查锁定（提高效率，避免每次获取实例都加锁）
+    if (!Nthread_ptmotor) {
+        QMutexLocker locker(&m_instanceMutex);  // 加锁确保线程安全
+        if (!Nthread_ptmotor) {
+            Nthread_ptmotor = new thread_ptmotor();
+        }
+    }
+    return Nthread_ptmotor;
 }
 
 thread_ptmotor::~thread_ptmotor()
@@ -34,6 +52,11 @@ void thread_ptmotor::doWork()
     // 这里是线程的主要工作逻辑
 
     while(threadState) {
+
+
+        //启动
+
+
         for(int i=0;i<m_ptMotorSettings.count();i++)//将使能的电机设置参数都发送到单片机
         {
             if(Received_Success==1)
@@ -53,9 +76,6 @@ void thread_ptmotor::doWork()
                 }
             }
         }
-
-
-
 
         if(All_Ptmotors_Success)//确定电机参数都发送完成后才开始进行电机运行
         {
@@ -146,8 +166,6 @@ void thread_ptmotor::doWork()
                     {
                         qDebug()<<"电机"<<QString::number(i)<<"已运行8个POS";
                     }
-
-
                 }
             }
 

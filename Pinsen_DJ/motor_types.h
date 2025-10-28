@@ -30,6 +30,7 @@ struct PTMotorFP_Setting_basis
 
 struct PTMotorFP_Setting_basis1
 {
+    bool en = false;//使能
     QString m_PTName;            //PT名字
     QString m_POS;               //POS顺序
     QString m_MaxValue;          //上限

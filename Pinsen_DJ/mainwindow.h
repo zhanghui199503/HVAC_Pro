@@ -10,6 +10,18 @@
 #include "motor_types.h"
 #include "MFormMotor.h"
 
+#include "FormLogShow.h"
+
+#define FUNC_PT_ID      1
+#define FUNC_LIN_ID     2
+#define FUNC_BLO_ID     3
+#define FUNC_THE_ID     4
+#define FUNC_ANION_ID   5
+#define FUNC_AQS_ID     6
+#define RUNC_PM25_ID    7
+#define RUNC_PTC_ID     8
+
+
 class thread_ptmotor;
 //struct PTMotorFP_Setting_basis
 //{
@@ -162,6 +174,8 @@ public:
     QTimer *pressTimer;
     QTimer *CommunicationTimer;
 
+    QTimer *ShowUI_DataTimer;//显示界面数据定时器
+
     int InitialValue = 0;//初始值Excel行数
     QSqlDatabase Sqlserverdb;//创建数据库
     int Pop_OK_flag = 0;//弹窗标志位
@@ -273,6 +287,9 @@ private slots:
 
     void on_Btn_test2_clicked();
 
+    void Slot_ShowUI_Data();
+    void showFuncUIData(uchar _num);
+
 private:
 
 
@@ -301,4 +318,14 @@ signals:
 };
 extern int reszult ;//记录追溯结果
 extern MainWindow *MainShow;
+
+
+extern QList<PTMotorFP_Setting_basis> PTmotorSettingsList;
+extern QList<PTMotorFP_Setting_basis1> PTmotorSettingsList1;
+extern QList<LINMotorFP_Setting_basis> LINmotorSettingsList;
+extern QList<LINMotorFP_Setting_basis1> LINmotorSettingsList1;
+extern QList<Blower_Setting_basis> BlowerSettingsList;
+extern QList<Blower_Setting_basis1> BlowerSettingsList1;
+extern QList<Res_Setting_basis> ResSettingsList;
+
 #endif // MAINWINDOW_H

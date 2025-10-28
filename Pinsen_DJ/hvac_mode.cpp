@@ -33,6 +33,7 @@ void HVAC_Mode::Main_Init()
     QString path = QApplication::applicationDirPath() + "/HVAC/PD_HVACMode.ini";
     QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
     INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
+
     for (int i = 0;i <Main_PD_Name.count();i++ )
     {
         Main_PD_Name.at(i)->setText(INI_File->value("PD"+QString::number(i+1)+"_HVAC_Name").toString());

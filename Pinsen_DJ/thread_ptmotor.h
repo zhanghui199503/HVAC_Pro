@@ -17,6 +17,8 @@
 #include "motor_types.h"  // 包含独立的类型定义
 #include "thread_CommTask.h"
 
+#define Motor_Count 12
+
 class thread_ptmotor : public QObject
 {
     Q_OBJECT
@@ -24,6 +26,10 @@ class thread_ptmotor : public QObject
 public:
     explicit thread_ptmotor(QObject *parent = nullptr);
     ~thread_ptmotor();
+
+    static thread_ptmotor* Nthread_ptmotor;
+
+    static thread_ptmotor* getInstance();
 
     QTimer *DelayTimer;
 
@@ -75,7 +81,7 @@ public:
     char v_state_value[12] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};    //状态值
     uchar v_posIndex[12] = {0};    //状态值
 
-    PTMotor_Current_Status R_data[12];
+    PTMotor_Current_Status R_data[Motor_Count];
 
     uchar PtMotorOver[12][1] = {{0}};
     int Pt[12] = {0};
@@ -106,9 +112,17 @@ signals:
     void SendMotortatus(QString Modeltype,int ID,int MotorNum,int CurrentV,int CurrentA,int CurrentPos,int CurrentState);
 
 protected:
+
+
+
+private:
+    static QMutex m_instanceMutex;      // 单例创建的互斥锁
+
     // 可以添加其他私有成员
     QList<PTMotorFP_Setting_basis> m_ptMotorSettings;
     QList<PTMotorFP_Setting_basis1> m_ptMotorSettings1;
 };
+
+extern thread_ptmotor *Nthread_ptmotor;
 
 #endif // THREAD_PTMOTOR_H
