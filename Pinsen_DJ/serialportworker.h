@@ -1,11 +1,13 @@
 #ifndef SERIALPORTWORKER_H
 #define SERIALPORTWORKER_H
 
+
 #include <QObject>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QString>
 //#include "thread_CommTask.h"
+
 
 class SerialPortWorker : public QObject
 {
@@ -37,8 +39,12 @@ signals:
     void serialClosed(int portIndex); // 串口关闭时发出信号，附带端口索引
 
     void ptMotorDataReceived(QByteArray data, int m_portIndex);
+    void blowerDataReceived(QByteArray data, int m_portIndex);
+    void Data_return(int _num);
 
-    void Data_return();
+    void linMotorDataReceived(QByteArray _reData, int _MotorID);
+
+    void thermistorDataReceived(QByteArray _reData);
 
 private slots:
     void handleReadyRead(); // 处理串口收到的数据

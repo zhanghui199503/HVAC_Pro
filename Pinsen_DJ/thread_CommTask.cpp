@@ -16,9 +16,11 @@
 //#include "Header_File.h"
 #include "thread_CommTask.h"
 #include "serialportworker.h"
-thread_CommTask * Nthread_CommTask;
+thread_CommTask * Nthread_CommTask[3];
 
-TaskResult resultgogo;
+TaskResult resultgogo1;
+TaskResult resultgogo2;
+TaskResult resultgogo3;
 
 thread_CommTask::thread_CommTask(QObject *parent) : QThread(parent)
 {
@@ -39,8 +41,17 @@ void thread_CommTask::run()
         //m_semaphore.acquire(); // 等待任务
         if(!m_buttonState)
             break;
+
+//        qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：正在执行";
+
         int res = task_funtion();//执行任务
         if(res == 0){
+            //qDebug()<<"1";
+            this->msleep(1);
+        }
+        else
+        {
+            //qDebug()<<"12";
             this->msleep(1);
         }
     }
@@ -51,7 +62,13 @@ int thread_CommTask::task_funtion(){
 
     uchar byteValue;
     //emit addLog("消费线程",QString("开始"));
+
+    QMutexLocker locker(&m_mutex);  // 加锁
+
     if(Swtich_isFixed == 0){//执行普通任务
+        if(my_portIndex == 1){
+            //qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：没用";
+        }
         if (m_taskQueue.isEmpty() && Error_Count == 0){
             //emit addLog("消费线程",QString("任务为空"));
             Swtich_isFixed = 1;
@@ -59,20 +76,25 @@ int thread_CommTask::task_funtion(){
         }
         else{//前面有错误次数，代表未成功执行或者未正常返回数据，不读取任务，重新执行原来的任务
             if(Error_Count == 0){
+//                qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：接收到任务0"<<m_taskQueue.size();
                 task = m_taskQueue.takeFirst();//从队列的开头移除并返回元素
                 //task = m_taskQueue.head();//获取队列的头元素，但不移除它
             }
             else if(Error_Count > 0)
             {
+//                qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：接收到任务1"<<m_taskQueue.size();
                 task = Error_tast;
             }
-            int index = 0; // 要提取的字节索引 // 转换为两位十六进制字符串（带前导零）
-            if (index >= 0 && index < task.data.size()){
-                byteValue = static_cast<uchar>(task.data.at(index));// 提取指定位置的字节（转换为无符号数避免符号问题）
-            }
+//            int index = 0; // 要提取的字节索引 // 转换为两位十六进制字符串（带前导零）
+//            if (index >= 0 && index < task.data.size()){
+//                byteValue = static_cast<uchar>(task.data.at(index));// 提取指定位置的字节（转换为无符号数避免符号问题）
+//            }
 
-            QString hexString = QString("%1").arg(byteValue, 2, 16, QChar('0')).toUpper();
-            emit addLog("消费线程",QString("读取普通任务:%1").arg(byteValue));
+
+//            qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：接收到任务1";
+//            QString hexString = QString("%1").arg(byteValue, task.data.size() , 16, QChar('0')).toUpper();
+//            qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：内容：" + hexString;
+//            emit addLog("消费线程",QString("读取普通任务:%1").arg(byteValue));
             //            emit SendData(task.data);
 
             if(task.ComNum=="")
@@ -86,7 +108,9 @@ int thread_CommTask::task_funtion(){
 
             }
             //            emit SendData(task.data);
-            sendDataToSerial(0, task.data);
+            qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：内容：" << task.data.toHex();
+            Send_finish = false;//复位接收变量
+            sendDataToSerial(my_portIndex, task.data);
         }
         Swtich_isFixed = 1;
     }
@@ -97,17 +121,27 @@ int thread_CommTask::task_funtion(){
             if(fixedError_Count == 0){
                 isFixed_Step = (isFixed_Step + 1) % m_fixedTasks.size();// 移动到下一个元素（循环）
                 task = m_fixedTasks.at(isFixed_Step);// 获取当前元素（不删除）
+
+                if(!(*task.en)){
+
+                    //qDebug()<<"【消费线程】未开使能：" << task.data;
+//                    qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】未开使能："<< task.data.toHex();
+
+//                    Swtich_isFixed = 1;
+                    return 0;
+                }
             }
             else{
                 task = m_fixedTasks.at(isFixed_Step);// 获取当前元素（不删除）
             }
-            int index = 0; // 要提取的字节索引
-            if (index >= 0 && index < task.data.size()){
-                byteValue = static_cast<uchar>(task.data.at(index));//提取指定位置的字节（转换为无符号数避免符号问题）
-            }
+//            int index = 0; // 要提取的字节索引
+//            if (index >= 0 && index < task.data.size()){
+//                byteValue = static_cast<uchar>(task.data.at(index));//提取指定位置的字节（转换为无符号数避免符号问题）
+//            }
 
-            QString hexString = QString("%1").arg(byteValue, 2, 16, QChar('0')).toUpper();
-            emit addLog("消费线程",QString("读取固定任务:%1").arg(byteValue));
+//            QString hexString = QString("%1").arg(byteValue, 2, 16, QChar('0')).toUpper();
+//            emit addLog("消费线程",QString("读取固定任务:%1").arg(byteValue));
+//            qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】读取固定任务："<< task.data.toHex();
 //            if(task.ComNum=="")
 //            {
 
@@ -118,7 +152,8 @@ int thread_CommTask::task_funtion(){
 //            {
 
 //            }
-            sendDataToSerial(0, task.data);
+            Send_finish = false;//复位接收变量
+            sendDataToSerial(my_portIndex, task.data);
             //            emit SendData(task.data);
         }
         else{
@@ -126,22 +161,30 @@ int thread_CommTask::task_funtion(){
             return 0;
         }
     }
-    Send_finish = false;//复位接收变量
+
+    locker.unlock();
+
     Send_Elaps.start();//开始计时
     double testTime;
     while(!Send_finish){
         testTime = (double)Send_Elaps.nsecsElapsed() / (double)1000000 / (double)1000; //s
         if(testTime > 0.2){//S  大于该描数还未接收为接收失败
             Send_finish = true;
+
+
+//            qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：普通任务读取接收失败"<<Swtich_isFixed;
+
             if(Swtich_isFixed == 1){
 //                qDebug()<<"gogo1";
                 //普通任务(由于执行完成后切换，所以和上面是相反的)
                 emit addLog("消费线程",QString("普通任务读取接收失败，时间：%1s").arg(testTime));
+//                qDebug()<<"【消费线程】"<<QString("普通任务读取接收失败，时间：%1s").arg(testTime);
+                qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"】：普通任务读取接收失败";
                 Error_Count++;
                 if(Error_Count >= 3){//大于3次报错并删除任务
                     Error_Count = 0;
-                    task.resultPtr->completed = true;
-                    task.resultPtr->success = false;
+//                    task.resultPtr->completed = true;
+//                    task.resultPtr->success = false;
                 }
                 else{
                     Error_tast = task;
@@ -149,20 +192,25 @@ int thread_CommTask::task_funtion(){
             }
             else if(Swtich_isFixed == 0){//固定任务
                 emit addLog("消费线程",QString("固定任务读取接收失败，时间：%1s").arg(testTime));
+                qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"固定任务读取接收失败";
                 fixedError_Count++;
                 if(fixedError_Count >= 2){//固定任务失败
                     fixedError_Count = 0;
-                    task.resultPtr->completed = true;
-                    task.resultPtr->success = false;
+//                    task.resultPtr->completed = true;
+//                    task.resultPtr->success = false;
                     //跳过任务
                 }
             }
             return 2;
         }
     }
+    Error_Count = 0;
 
-    task.resultPtr->completed = true;
-    task.resultPtr->success = true;
+    testTime = (double)Send_Elaps.nsecsElapsed() / (double)1000000 / (double)1000; //s
+//    qDebug()<<"【消费线程】"<<QString("普通任务读取接收成功")<<testTime;
+//    qDebug()<<"【消费线程"+ QString::number(my_portIndex) +"普通任务读取接收成功";
+//    task.resultPtr->completed = true;
+//    task.resultPtr->success = true;
     //task.resultPtr->result = result.result;
 
     //        //QMutexLocker locker(&m_mutex); // 自动加锁/解锁
@@ -223,78 +271,85 @@ void thread_CommTask::threadResume()//继续线程
 //}
 
 // 添加普通任务
-void thread_CommTask::addNormalTask(const QByteArray data,TaskResult* resultPtr) {
-    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
+void thread_CommTask::addNormalTask(const QByteArray data) {
+//    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
 
     Task task;
     task.data = data;
     task.isFixed = false;
     //m_nextTaskId++;// 分配唯一ID
-    task.resultPtr = resultPtr;  // 保存结果指针
+//    task.resultPtr = resultPtr;  // 保存结果指针
 
     // 初始化结果为未完成
-    resultPtr->completed = false;
-    resultPtr->success = false;
-    resultPtr->result.clear();
+//    resultPtr->completed = false;
+//    resultPtr->success = false;
+//    resultPtr->result.clear();
 
 
     QMutexLocker locker(&m_mutex); // 多线程安全
     m_taskQueue.enqueue(task);     // 入队
-    qDebug()<<"11"<<task.data;
-    m_semaphore.release();         // 通知线程有新任务
+//    qDebug()<<"11"<<task.data;
+
+//    qDebug()<<"add task"<<task.data;
+//    m_semaphore.release();         // 通知线程有新任务
 }
 
-void thread_CommTask::addNormalTask(QString PTName,const QByteArray data,TaskResult* resultPtr) {
-    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
+//void thread_CommTask::addNormalTask(QString PTName,const QByteArray data) {
+////    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
 
-    Task task;
-    task.data = data;
-    task.isFixed = false;
-    //m_nextTaskId++;// 分配唯一ID
-    task.resultPtr = resultPtr;  // 保存结果指针
-    task.ComNum = PTName;
-    // 初始化结果为未完成
-    resultPtr->completed = false;
-    resultPtr->success = false;
-    resultPtr->result.clear();
-    QMutexLocker locker(&m_mutex); // 多线程安全
-    m_taskQueue.enqueue(task);     // 入队
-    qDebug()<<"11"<<task.data;
-    m_semaphore.release();         // 通知线程有新任务
-}
+//    Task task;
+//    task.data = data;
+//    task.isFixed = false;
+//    //m_nextTaskId++;// 分配唯一ID
+////    task.resultPtr = resultPtr;  // 保存结果指针
+//    task.ComNum = PTName;
+
+
+//    // 初始化结果为未完成
+////    resultPtr->completed = false;
+////    resultPtr->success = false;
+////    resultPtr->result.clear();
+//    QMutexLocker locker(&m_mutex); // 多线程安全
+//    m_taskQueue.enqueue(task);     // 入队
+//    qDebug()<<"11"<<task.data;
+//    m_semaphore.release();         // 通知线程有新任务
+//}
 
 // 添加固定任务
-void thread_CommTask::addFixedTask(const QByteArray& data,TaskResult* resultPtr) {
-    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
+void thread_CommTask::addFixedTask(const QByteArray& data,bool* _send_en) {
+//    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
 
     Task task;
     task.data = data;
     task.isFixed = true;
-    task.resultPtr = resultPtr;  // 保存结果指针
+//    task.resultPtr = resultPtr;  // 保存结果指针
 
+    task.en = _send_en;
     // 初始化结果为未完成
-    resultPtr->completed = false;
-    resultPtr->success = false;
-    resultPtr->result.clear();
+//    resultPtr->completed = false;
+//    resultPtr->success = false;
+//    resultPtr->result.clear();
 
     QMutexLocker locker(&m_mutex); // 多线程安全
     m_fixedTasks.enqueue(task);    // 入队
-    m_semaphore.release();         // 通知线程有新任务
+//    qDebug()<<"add Fixed"<<task.data;
+//    m_semaphore.release();         // 通知线程有新任务
 }
 
 // 添加固定任务
-void thread_CommTask::addFixedTask(QString PTName,const QByteArray& data,TaskResult* resultPtr) {
-    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
+void thread_CommTask::addFixedTask(QString PTName,const QByteArray& data, bool* _send_en) {
+//    Q_ASSERT(resultPtr != nullptr);  // 确保结果指针有效
 
     Task task;
     task.data = data;
     task.isFixed = true;
-    task.resultPtr = resultPtr;  // 保存结果指针
+//    task.resultPtr = resultPtr;  // 保存结果指针
     task.ComNum = PTName;
+    task.en = _send_en;
     // 初始化结果为未完成
-    resultPtr->completed = false;
-    resultPtr->success = false;
-    resultPtr->result.clear();
+//    resultPtr->completed = false;
+//    resultPtr->success = false;
+//    resultPtr->result.clear();
 
     QMutexLocker locker(&m_mutex); // 多线程安全
     m_fixedTasks.enqueue(task);    // 入队

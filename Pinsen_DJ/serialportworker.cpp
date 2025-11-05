@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QThread>
 
+#include "thread_CommTask.h"
+
 // 协议常量
 namespace {
 const quint8 HEADER_SEND = 0x68;
@@ -11,10 +13,11 @@ const quint8 END_BYTE1 = 0x0D;
 const quint8 END_BYTE2 = 0x0A;
 
 const quint8 BOARD_TYPE_PT = 0x01;        // PT电机
-const quint8 BOARD_TYPE_BJ = 0x05;        // PT电机
-const quint8 BOARD_TYPE_LIN = 0x02;       // LIN电机
-const quint8 BOARD_TYPE_THERMISTOR = 0x03; // 温敏电阻
-const quint8 BOARD_TYPE_BLOWER = 0x04;    // 鼓风机
+const quint8 BOARD_TYPE_BJ = 0x02;        // PT电机
+const quint8 BOARD_TYPE_LIN = 0x03;       // LIN电机
+const quint8 BOARD_TYPE_THERMISTOR = 0x04; // 温敏电阻
+const quint8 BOARD_TYPE_BLOWER = 0x07;    // 鼓风机
+const quint8 BOARD_TYPE_Curr = 0x05;    // 硬件电流
 }
 
 SerialPortWorker::SerialPortWorker(int portIndex, QObject *parent)
@@ -138,12 +141,14 @@ void SerialPortWorker::setFlowControl(QSerialPort::FlowControl flowControl)
 
 void SerialPortWorker::handleReadyRead()
 {
+    //qDebug()<<m_serialPort<<m_serialPort->isOpen();
     if (m_serialPort && m_serialPort->isOpen()) {
         QByteArray data = m_serialPort->readAll();
-         emit Data_return();
+//        qDebug()<<"林辉收到数据:"<<data;
+//         emit Data_return();
         if (!data.isEmpty()) {
 //            qDebug() << "Data received from serial port for index:" << m_portIndex<< "Size:" << data.size();
-            //            emit dataReceived(data, m_portIndex);
+//                        emit dataReceived(data, m_portIndex);
             // 将新数据添加到缓冲区
             m_dataBuffer.append(data);
 
@@ -157,37 +162,27 @@ void SerialPortWorker::parseFrames()
 {
     while (m_dataBuffer.size() >= 5) // 至少需要帧头和长度字段
        {
-//           qDebug() << "检测1 - 缓冲区大小:" << m_dataBuffer.size();
-
            // 查找帧头0x69
            int headerIndex = m_dataBuffer.indexOf(0x69);
 //           qDebug() << "检测当前69数据位置:" << headerIndex;
-
            if (headerIndex == -1)
            {
                // 没有找到帧头，清空缓冲区
                m_dataBuffer.clear();
                break;
            }
-
-//           qDebug() << "检测2";
-
            // 移除帧头之前的所有数据
            if (headerIndex > 0) {
                qDebug() << "移除帧头前的" << headerIndex << "字节";
                m_dataBuffer = m_dataBuffer.mid(headerIndex);
                headerIndex = 0; // 现在帧头在位置0
            }
-
            // 检查长度字段是否可用
            if (m_dataBuffer.size() < 2)
            {
                // 数据不足，等待更多数据
                break;
            }
-
-//           qDebug() << "检测3";
-
            // 读取长度字段 (Data1) - 这个长度是从功能码(Data3)开始到结束符前的内容长度
            quint8 length = static_cast<quint8>(m_dataBuffer[1]);
 //           qDebug() << "长度字段:" << length;
@@ -203,11 +198,28 @@ void SerialPortWorker::parseFrames()
                break;
            }
 
-//           qDebug() << "检测4";
+
+           //qDebug() <<"接收到数据，串口号为："<<m_portIndex;
+//                   emit Data_return(m_portIndex);
+           switch (m_portIndex) {
+               case 0:
+                   Nthread_CommTask[0]->Send_finish=true;
+                   break;
+               case 1:
+                   Nthread_CommTask[1]->Send_finish=true;
+                  break;
+               case 2:
+                   Nthread_CommTask[2]->Send_finish=true;
+                  break;
+               default:
+
+               break;
+           }
+
 
            // 提取完整帧
            QByteArray frame = m_dataBuffer.mid(0, frameLength);
-//           qDebug() << "提取的帧 (hex):" << frame.toHex(' ').toUpper();
+           qDebug() << "提取的帧 (hex):" << frame.toHex().toUpper();
 
            // 验证结束符
            if (static_cast<quint8>(frame[frameLength-2]) != END_BYTE1 || static_cast<quint8>(frame[frameLength-1]) != END_BYTE2)
@@ -226,13 +238,8 @@ void SerialPortWorker::parseFrames()
                m_dataBuffer = m_dataBuffer.mid(frameLength);
                continue;
            }
-
-//           qDebug() << "检测6";
-
            // 提取板子类型 (Data4位置，索引4)
            quint8 boardType = static_cast<quint8>(frame[4]);
-//           qDebug() << "板子类型:" << QString::number(boardType, 16).toUpper();
-
            // 根据板子类型发射信号
            switch (boardType) {
            case BOARD_TYPE_PT: // PT电机
@@ -240,20 +247,24 @@ void SerialPortWorker::parseFrames()
                emit ptMotorDataReceived(frame, m_portIndex);
                break;
            case BOARD_TYPE_BJ: // BJ电机
-               qDebug() << "下发到BJ线程进行处理"<<frame;
-//               emit ptMotorDataReceived(frame, m_portIndex);
+               qDebug() << "下发到BJ线程进行处理";
+//               emit BJMotorDataReceived(frame, m_portIndex);
                break;
            case BOARD_TYPE_LIN: // LIN电机
-               qDebug() << "下发到LIN线程进行处理"<<frame;
-//               emit linMotorDataReceived(frame, m_portIndex);
+               qDebug() << "下发到LIN线程进行处理";
+
+               emit linMotorDataReceived(frame, frame[5]);
                break;
            case BOARD_TYPE_THERMISTOR: // 温敏电阻
                qDebug() << "下发到RES线程进行处理"<<frame;
-//               emit thermistorDataReceived(frame, m_portIndex);
+               emit thermistorDataReceived(frame);
                break;
            case BOARD_TYPE_BLOWER: // 鼓风机
-               qDebug() << "下发到Blower线程进行处理"<<frame;
-//               emit blowerDataReceived(frame, m_portIndex);
+               emit blowerDataReceived(frame, m_portIndex);
+               break;
+           case BOARD_TYPE_Curr:
+               qDebug() << "鼓风机数据返回：";
+               emit blowerDataReceived(frame, m_portIndex);
                break;
            default:
                qDebug() << "Unknown board type: 0x" << QString::number(boardType, 16).toUpper()

@@ -8,10 +8,18 @@ MainWindow *MainWindow::mutualui = nullptr;
 QList<PTMotorFP_Setting_basis> PTmotorSettingsList;
 QList<PTMotorFP_Setting_basis1> PTmotorSettingsList1;
 QList<LINMotorFP_Setting_basis> LINmotorSettingsList;
-QList<LINMotorFP_Setting_basis1> LINmotorSettingsList1;
-QList<Blower_Setting_basis> BlowerSettingsList;
-QList<Blower_Setting_basis1> BlowerSettingsList1;
-QList<Res_Setting_basis> ResSettingsList;
+QList<LINMotorFP_Setting_basis1> LINmotorSettingsList2;
+QList<QList<LINMotorFP_Setting_basis1>> LINmotorSettingsList1;
+//QList<Blower_Setting_basis> BlowerSettingsList;
+//QList<Blower_Setting_basis1> BlowerSettingsList1;
+
+QList<ToralThermistor_Setting_basis> ResSettingsList;
+QList<Thermistor_Setting_basis> ResSettingsList1;
+QList<QList<Thermistor_Setting_basis>> ResSettingsList2;
+
+Blower_Setting_basis mBlowerSettingsList;
+Blower_Setting_basis1 mBlowerSettingsList1;
+
 
 QStringList MySql_TableName = {"datas_linecode_d","datas_linecode_d1","datas_linecode_d2","datas_linecode_d3"};
 QStringList MySql_Create = {
@@ -170,7 +178,6 @@ QVector<QString> sqldataSpeed ={
 };
 
 
-
 int reszult = 0;//记录追溯结果
 QByteArray ECUmode,ECUAPP,ECUBOOT,ECUyingjianbanben;//条码,型号
 QString shangxianma,xinghao,liushuihao,Inplacetimes,Alarmdata;
@@ -183,67 +190,85 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     mutualui = this;
 
+    ui->Auto_ManualNG->hide();
+
+
+    qRegisterMetaType<Blower_Setting_basis>("Blower_Setting_basis");
+    qRegisterMetaType<Blower_Setting_basis1>("Blower_Setting_basis1");
+    m_Form_ModeBusRtu = new MForm_ModeBusRtu();
+
     NFormLogShow = FormLogShow::getInstance();
     NFormLogShow->show();
     NFormLogShow->addLog("主窗口","初始化");
 
-//    QGridLayout *lll = new QGridLayout;
+    Nthread_ptmotor = thread_ptmotor::getInstance();
 
-    MFormMotor *m_FormMotor = new MFormMotor(nullptr, "PT1",0);
-    MFormMotor *m_FormMotor1 = new MFormMotor(nullptr, "PT2",0);
-    MFormMotor *m_FormMotor2 = new MFormMotor(nullptr, "PT3",0);
-    MFormMotor *m_FormMotor3 = new MFormMotor(nullptr, "PT4",0);
-    MFormMotor *m_FormMotor4 = new MFormMotor(nullptr, "PT5",0);
-    MFormMotor *m_FormMotor5 = new MFormMotor(nullptr, "PT6",0);
-    MFormMotor *m_FormMotor6 = new MFormMotor(nullptr, "PT7",0);
-    MFormMotor *m_FormMotor7 = new MFormMotor(nullptr, "PT8",0);
-    MFormMotor *m_FormMotor8 = new MFormMotor(nullptr, "PT9",0);
-    MFormMotor *m_FormMotor9 = new MFormMotor(nullptr, "PT10",0);
-    MFormMotor *m_FormMotor10 = new MFormMotor(nullptr, "PT11",0);
-    MFormMotor *m_FormMotor11 = new MFormMotor(nullptr, "PT12",0);
-
-    MFormMotor *m_FormLinMotor = new MFormMotor(nullptr, "LIN1",1);
-    MFormMotor *m_FormLinMotor1 = new MFormMotor(nullptr, "LIN2",1);
-    MFormMotor *m_FormLinMotor2 = new MFormMotor(nullptr, "LIN3",1);
-    MFormMotor *m_FormLinMotor3 = new MFormMotor(nullptr, "LIN4",1);
-    MFormMotor *m_FormLinMotor4 = new MFormMotor(nullptr, "LIN5",1);
-    MFormMotor *m_FormLinMotor5 = new MFormMotor(nullptr, "LIN6",1);
-    MFormMotor *m_FormLinMotor6 = new MFormMotor(nullptr, "LIN7",1);
-    MFormMotor *m_FormLinMotor7 = new MFormMotor(nullptr, "LIN8",1);
-    MFormMotor *m_FormLinMotor8 = new MFormMotor(nullptr, "LIN9",1);
-    MFormMotor *m_FormLinMotor9 = new MFormMotor(nullptr, "LIN10",1);
-    MFormMotor *m_FormLinMotor10 = new MFormMotor(nullptr, "LIN11",1);
-    MFormMotor *m_FormLinMotor11 = new MFormMotor(nullptr, "LIN12",1);
-
-    ui->gridLayout->addWidget(m_FormMotor, 0, 0);
-    ui->gridLayout->addWidget(m_FormMotor1, 0, 1);
-    ui->gridLayout->addWidget(m_FormMotor2, 0, 2);
-    ui->gridLayout->addWidget(m_FormMotor3, 0, 3);
-    ui->gridLayout->addWidget(m_FormMotor4, 0, 4);
-    ui->gridLayout->addWidget(m_FormMotor5, 0, 5);
-    ui->gridLayout->addWidget(m_FormMotor6, 1, 0);
-    ui->gridLayout->addWidget(m_FormMotor7, 1, 1);
-    ui->gridLayout->addWidget(m_FormMotor8, 1, 2);
-    ui->gridLayout->addWidget(m_FormMotor9, 1, 3);
-    ui->gridLayout->addWidget(m_FormMotor10, 1, 4);
-    ui->gridLayout->addWidget(m_FormMotor11, 1, 5);
-
-    ui->gridLayout->addWidget(m_FormLinMotor, 2, 0);
-    ui->gridLayout->addWidget(m_FormLinMotor1, 2, 1);
-    ui->gridLayout->addWidget(m_FormLinMotor2, 2, 2);
-    ui->gridLayout->addWidget(m_FormLinMotor3, 2, 3);
-    ui->gridLayout->addWidget(m_FormLinMotor4, 2, 4);
-    ui->gridLayout->addWidget(m_FormLinMotor5, 2, 5);
-    ui->gridLayout->addWidget(m_FormLinMotor6, 3, 0);
-    ui->gridLayout->addWidget(m_FormLinMotor7, 3, 1);
-    ui->gridLayout->addWidget(m_FormLinMotor8, 3, 2);
-    ui->gridLayout->addWidget(m_FormLinMotor9, 3, 3);
-    ui->gridLayout->addWidget(m_FormLinMotor10, 3, 4);
-    ui->gridLayout->addWidget(m_FormLinMotor11, 3, 5);
+    m_Blower = MBlower::getInstance();
+    connect(this, &MainWindow::sign_BlowerFixedPar, m_Blower, &MBlower::slot_BlowerFixedPar);
+    //    connect(this, &MainWindow::sign_BlowerStop, m_Blower, &MBlower::slot_BlowerStop);
+    //    connect(this, &MainWindow::sign_BlowerContinue, m_Blower, &MBlower::slot_BlowerContinue);
+    //    connect(m_Blower, &MBlower::sign_setled, this, &MainWindow::slot_setled);
 
 
+    initUIControlArrays();
 
-//    ui->groupBox_23->setLayout(lll);
+    //    QGridLayout *lll = new QGridLayout;
+
+    m_FormMotor[0] = new MFormMotor(nullptr, "PT1",0);
+    m_FormMotor[1] = new MFormMotor(nullptr, "PT2",0);
+    m_FormMotor[2] = new MFormMotor(nullptr, "PT3",0);
+    m_FormMotor[3] = new MFormMotor(nullptr, "PT4",0);
+    m_FormMotor[4] = new MFormMotor(nullptr, "PT5",0);
+    m_FormMotor[5] = new MFormMotor(nullptr, "PT6",0);
+    m_FormMotor[6] = new MFormMotor(nullptr, "PT7",0);
+    m_FormMotor[7] = new MFormMotor(nullptr, "PT8",0);
+    m_FormMotor[8] = new MFormMotor(nullptr, "PT9",0);
+    m_FormMotor[9] = new MFormMotor(nullptr, "PT10",0);
+    m_FormMotor[10] = new MFormMotor(nullptr, "PT11",0);
+    m_FormMotor[11] = new MFormMotor(nullptr, "PT12",0);
+
+    m_FormLinMotor[0] = new MFormMotor(nullptr, "LIN1",1);
+    m_FormLinMotor[1] = new MFormMotor(nullptr, "LIN2",1);
+    m_FormLinMotor[2] = new MFormMotor(nullptr, "LIN3",1);
+    m_FormLinMotor[3] = new MFormMotor(nullptr, "LIN4",1);
+    m_FormLinMotor[4] = new MFormMotor(nullptr, "LIN5",1);
+    m_FormLinMotor[5] = new MFormMotor(nullptr, "LIN6",1);
+    m_FormLinMotor[6] = new MFormMotor(nullptr, "LIN7",1);
+    m_FormLinMotor[7] = new MFormMotor(nullptr, "LIN8",1);
+    m_FormLinMotor[8] = new MFormMotor(nullptr, "LIN9",1);
+    m_FormLinMotor[9] = new MFormMotor(nullptr, "LIN10",1);
+    m_FormLinMotor[10] = new MFormMotor(nullptr, "LIN11",1);
+    m_FormLinMotor[11] = new MFormMotor(nullptr, "LIN12",1);
+
+    ui->gridLayout->addWidget(m_FormMotor[0] ,0, 0);
+    ui->gridLayout->addWidget(m_FormMotor[1] , 0, 1);
+    ui->gridLayout->addWidget(m_FormMotor[2] , 0, 2);
+    ui->gridLayout->addWidget(m_FormMotor[3] , 0, 3);
+    ui->gridLayout->addWidget(m_FormMotor[4] , 0, 4);
+    ui->gridLayout->addWidget(m_FormMotor[5] , 0, 5);
+    ui->gridLayout->addWidget(m_FormMotor[6] , 1, 0);
+    ui->gridLayout->addWidget(m_FormMotor[7] , 1, 1);
+    ui->gridLayout->addWidget(m_FormMotor[8] , 1, 2);
+    ui->gridLayout->addWidget(m_FormMotor[9] , 1, 3);
+    ui->gridLayout->addWidget(m_FormMotor[10], 1, 4);
+    ui->gridLayout->addWidget(m_FormMotor[11], 1, 5);
+
+    ui->gridLayout->addWidget(m_FormLinMotor[0] ,2, 0);
+    ui->gridLayout->addWidget(m_FormLinMotor[1] ,2, 1);
+    ui->gridLayout->addWidget(m_FormLinMotor[2] ,2, 2);
+    ui->gridLayout->addWidget(m_FormLinMotor[3] ,2, 3);
+    ui->gridLayout->addWidget(m_FormLinMotor[4] ,2, 4);
+    ui->gridLayout->addWidget(m_FormLinMotor[5] ,2, 5);
+    ui->gridLayout->addWidget(m_FormLinMotor[6] ,3, 0);
+    ui->gridLayout->addWidget(m_FormLinMotor[7] ,3, 1);
+    ui->gridLayout->addWidget(m_FormLinMotor[8] ,3, 2);
+    ui->gridLayout->addWidget(m_FormLinMotor[9] ,3, 3);
+    ui->gridLayout->addWidget(m_FormLinMotor[10], 3, 4);
+    ui->gridLayout->addWidget(m_FormLinMotor[11], 3, 5);
+
+
+
+    //    ui->groupBox_23->setLayout(lll);
     
     //----临时----
     //     this->showFullScreen();//全屏显示
@@ -254,10 +279,13 @@ MainWindow::MainWindow(QWidget *parent)
     //     QList<QScreen *> screenList = QGuiApplication::screens();
     //         QRec5t rect = screenList[0]->geometry();
     //     ww.setGeometry(rect);
-    
+
+
     Class_Init();//界面类初始化
-    //    Connect_Init();//槽函数初始化
+
     Main_Init();//界面初始化
+    //    Connect_Init();//槽函数初始化
+
     Excelinit();//Excel初始化
     MySql_Init();//数据库初始化
     testsqlinit();//将数据参数全赋0
@@ -266,7 +294,7 @@ MainWindow::MainWindow(QWidget *parent)
     qRegisterMetaType<QVector<int>>("QVector<int>");//注册
     Update_Number();//开始访问一下数据库
 
-//    setVoltageToolTip(0, ui->M1_Motor_POS1,"1.26V","0.023A","1.28V","1.24V");
+    //    setVoltageToolTip(0, ui->M1_Motor_POS1,"1.26V","0.023A","1.28V","1.24V");
     ui->tabWidget->setStyleSheet("QTabWidget::pane { border: none; }QTabBar::tab { height: 0px; width: 0px; margin: 0px; padding: 0px; border: none; }");
 
 }
@@ -350,9 +378,9 @@ void MainWindow::Class_Init()
 {
     SetSystemDataWindow = new SystemDataSet();
     Heart_error = new Communicationerror();
-    PLC_Connet = new PLC_MC();//PLC通讯连接
+    //    PLC_Connet = new PLC_MC();//PLC通讯连接
 
-    connect(PLC_Connet , &PLC_MC::Heraterr, this , &MainWindow::show_Err);
+    //    connect(PLC_Connet , &PLC_MC::Heraterr, this , &MainWindow::show_Err);
 
 
 
@@ -371,25 +399,29 @@ void MainWindow::Class_Init()
     m_COMRFID->Init_port();
     Data_Set = new DataSetting();//频道配置界面
     Manualui_Main = new Manualui();//手动界面
-    connect(PLC_Connet , &PLC_MC::test, this , &MainWindow::Update_show);
-    connect(PLC_Connet , &PLC_MC::SendZSdata, this , &MainWindow::Data_Processing);
-    connect(PLC_Connet , &PLC_MC::InPlaceTime, this , &MainWindow::Data_InPlaceTime);
-    connect(PLC_Connet , &PLC_MC::SendManualData, Manualui_Main , &Manualui::Update_show);
-    connect(this , &MainWindow::Sign_Start_detection, PLC_Connet , &PLC_MC::SetWriteCommand);
-    connect(Manualui_Main , &Manualui::Sign_Set_PLCdata, PLC_Connet , &PLC_MC::SetWriteCommand);
-    connect(Pop_OK , &Pop_ups_OK::Sign_Set_OK, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
-    connect(Pop_NG , &Pop_ups_NG::Sign_Set_NG, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
-    connect(this , &MainWindow::Sign_Start_detectionPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
-    connect(Data_Set , &DataSetting::Sign_Set_PLCdataPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
+    connect(Data_Set, &DataSetting::connectRequested,this,&MainWindow::onSerialConnectRequested);
+
+
+
+    //    connect(PLC_Connet , &PLC_MC::test, this , &MainWindow::Update_show);
+    //    connect(PLC_Connet , &PLC_MC::SendZSdata, this , &MainWindow::Data_Processing);
+    //    connect(PLC_Connet , &PLC_MC::InPlaceTime, this , &MainWindow::Data_InPlaceTime);
+    //    connect(PLC_Connet , &PLC_MC::SendManualData, Manualui_Main , &Manualui::Update_show);
+    //    connect(this , &MainWindow::Sign_Start_detection, PLC_Connet , &PLC_MC::SetWriteCommand);
+    //    connect(Manualui_Main , &Manualui::Sign_Set_PLCdata, PLC_Connet , &PLC_MC::SetWriteCommand);
+    //    connect(Pop_OK , &Pop_ups_OK::Sign_Set_OK, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
+    //    connect(Pop_NG , &Pop_ups_NG::Sign_Set_NG, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
+    //    connect(this , &MainWindow::Sign_Start_detectionPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
+    //    connect(Data_Set , &DataSetting::Sign_Set_PLCdataPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
     
-    connect(Manualui_Main , &Manualui::Sign_Current_interface_flag, this , &MainWindow::Thread_Qtimer);
-    connect(Data_Set , &DataSetting::Sign_Current_interface_flag, this , &MainWindow::Thread_Qtimer);
-    connect(Data_Set , &DataSetting::Sign_Set_PLCdata, PLC_Connet , &PLC_MC::SetWriteCommand);
-    connect(Data_Set , &DataSetting::Sign_Set_PLCWriteMode, PLC_Connet , &PLC_MC::Stop_ReadPLC);
-    connect(Data_Set , &DataSetting::Sign_Set_PLCReadMode, PLC_Connet , &PLC_MC::Start_ReadPLC);
-    connect(HVAC_Modelist , &HVAC_Mode::Sign_Set_PLCData, PLC_Connet , &PLC_MC::SetWriteCommand);
-    connect(HVAC_Modelist , &HVAC_Mode::Sign_Set_PLCDataPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
-    
+    //    connect(Manualui_Main , &Manualui::Sign_Current_interface_flag, this , &MainWindow::Thread_Qtimer);
+    //    connect(Data_Set , &DataSetting::Sign_Current_interface_flag, this , &MainWindow::Thread_Qtimer);
+    //    connect(Data_Set , &DataSetting::Sign_Set_PLCdata, PLC_Connet , &PLC_MC::SetWriteCommand);
+    //    connect(Data_Set , &DataSetting::Sign_Set_PLCWriteMode, PLC_Connet , &PLC_MC::Stop_ReadPLC);
+    //    connect(Data_Set , &DataSetting::Sign_Set_PLCReadMode, PLC_Connet , &PLC_MC::Start_ReadPLC);
+    //    connect(HVAC_Modelist , &HVAC_Mode::Sign_Set_PLCData, PLC_Connet , &PLC_MC::SetWriteCommand);
+    //    connect(HVAC_Modelist , &HVAC_Mode::Sign_Set_PLCDataPoint, PLC_Connet , &PLC_MC::SetWriteCommandPoint);
+
     pressTimer = new QTimer(this);
     pressTimer->setInterval(2000); // 设置计时器为 1 秒
     pressTimer->setSingleShot(true); // 单次触发
@@ -404,40 +436,85 @@ void MainWindow::Class_Init()
     connect(CommunicationTimer, &QTimer::timeout, this, &MainWindow::CommunicationTimes);
 
 
-    connect(Data_Set, &DataSetting::connectRequested,this,&MainWindow::onSerialConnectRequested);
-
-    Nthread_main = new thread_main();
-    Nthread_main->start();
-
-    Nthread_CommTask = new thread_CommTask();
-    Nthread_CommTask->start();
 
 
+
+    Nthread_CommTask[0] = new thread_CommTask();
+    Nthread_CommTask[0]->my_portIndex = 0;
+    //    Nthread_CommTask[0]->start();
+
+    Nthread_CommTask[1] = new thread_CommTask();
+    Nthread_CommTask[1]->my_portIndex = 1;
+    //    Nthread_CommTask[1]->start();
+
+    Nthread_CommTask[2] = new thread_CommTask();
+    Nthread_CommTask[2]->my_portIndex = 2;
+    //    Nthread_CommTask[2]->start();
 
     // 创建线程和工作对象
-    PTworker = new thread_ptmotor();
     workerThread = new QThread(this);
 
+    //LIN
+    Nthread_linmotor = thread_linmotor::getInstance();
+    Nthread_linmotor->start();
+
+    //温敏
+    Nthread_Thermistor = thread_Thermistor::getInstance();
+    Nthread_Thermistor->start();
 
     // 将工作对象移动到线程中
-    PTworker->moveToThread(workerThread);
+    Nthread_ptmotor->moveToThread(workerThread);
+
 
     // 连接信号和槽
-    connect(workerThread, &QThread::started, PTworker, &thread_ptmotor::doWork);
-    connect(PTworker, &thread_ptmotor::workFinished, workerThread, &QThread::quit);
-    connect(PTworker, &thread_ptmotor::workFinished, PTworker, &thread_ptmotor::deleteLater);
+    connect(workerThread, &QThread::started, Nthread_ptmotor, &thread_ptmotor::doWork);
+    connect(Nthread_ptmotor, &thread_ptmotor::workFinished, workerThread, &QThread::quit);
+    connect(Nthread_ptmotor, &thread_ptmotor::workFinished, Nthread_ptmotor, &thread_ptmotor::deleteLater);
     connect(workerThread, &QThread::finished, workerThread, &QThread::deleteLater);
 
-
-        connect(this, &MainWindow::testRunMotor, PTworker, &thread_ptmotor::ReceiveRunMotor);
+    connect(this, &MainWindow::testRunMotor, Nthread_ptmotor, &thread_ptmotor::ReceiveRunMotor);
     // 启动线程
-//    workerThread->start();
+    //    workerThread->start();
+
+
+    Nthread_main = new thread_main();
+
+
+    connect(Nthread_main, &thread_main::Sign_ShowUI_Step, this, &MainWindow::Slot_ShowUI_Step);
+    connect(Nthread_main, &thread_main::Sign_ShowUI_Results, this, &MainWindow::Slot_ShowUI_Results);
+
+    connect(Nthread_main, &thread_main::Sign_Run_Start, this, &MainWindow::on_Auto_Start_clicked);
+    connect(Nthread_main, &thread_main::Sign_Run_Reset, this, &MainWindow::on_Auto_Reset_clicked);
+    connect(Nthread_main, &thread_main::Sign_Run_Stop, this, &MainWindow::on_MandatoryLetgo_clicked);
+
+
+    if(! Data_Set->ui->Serial_Number->currentText().isEmpty()&& Data_Set->ui->Baud_rate->value()!=0)
+    {
+        Data_Set->ui->Start_Connect->click();
+    }
+    if(! Data_Set->ui->Serial_Number2->currentText().isEmpty()&& Data_Set->ui->Baud_rate_2->value()!=0)
+    {
+        Data_Set->ui->Start_Connect_2->click();
+    }
+    if(! Data_Set->ui->Serial_Number3->currentText().isEmpty()&& Data_Set->ui->Baud_rate_3->value()!=0)
+    {
+        Data_Set->ui->Start_Connect_3->click();
+    }
+
+    workerThread->start();
+
+    ShowUI_DataTimer = new QTimer(this);
+    connect(ShowUI_DataTimer,SIGNAL(timeout()),this,SLOT(Slot_ShowUI_Data()));
+    ShowUI_DataTimer->start(100);
+    Nthread_main->start();
 
 
 
-        ShowUI_DataTimer = new QTimer(this);
-        connect(ShowUI_DataTimer,SIGNAL(timeout()),this,SLOT(Slot_ShowUI_Data()));
-        ShowUI_DataTimer->start(100);
+    //    QThread::msleep(5000);
+
+    //消费线程开始
+    Nthread_CommTask[0]->start();
+    Nthread_CommTask[1]->start();
 }
 
 void MainWindow::onSerialConnectRequested(const QString &portName, qint32 baudRate,QSerialPort::DataBits dataBits,QSerialPort::Parity parity,QSerialPort::StopBits stopBits)
@@ -468,24 +545,64 @@ void MainWindow::createSerialConnection(const QString &portName, qint32 baudRate
     connect(worker, &SerialPortWorker::serialClosed, this, &MainWindow::onSerialClosed);
     connect(thread, &QThread::finished, worker, &QObject::deleteLater);
     connect(thread, &QThread::finished, thread, &QObject::deleteLater);
-    connect(worker, &SerialPortWorker::ptMotorDataReceived, PTworker, &thread_ptmotor::Receive_DataProcessing);
+    connect(worker, &SerialPortWorker::ptMotorDataReceived, Nthread_ptmotor, &thread_ptmotor::Receive_DataProcessing);
+
+    connect(worker, &SerialPortWorker::blowerDataReceived, m_Blower, &MBlower::slot_RecivceDatas);
+    connect(worker, &SerialPortWorker::linMotorDataReceived, Nthread_linmotor, &thread_linmotor::DataProcessing);
+
+    connect(worker, &SerialPortWorker::thermistorDataReceived, Nthread_Thermistor, &thread_Thermistor::DataProcessing);
+
     // 保存到映射表
     m_workers[portIndex] = worker;
     m_threads[portIndex] = thread;
     m_serialOpened[portIndex] = false;
 
     //thread_CommTask Nthread_CommTask
-    connect(worker, &SerialPortWorker::Data_return, this,[=]() {
-        Nthread_CommTask->Send_finish=true;
-    });
 
 
     if(portIndex == 1){
-        connect(Nthread_CommTask, &thread_CommTask::SendData_Board1, worker, &SerialPortWorker::writeData);
+        connect(worker, &SerialPortWorker::Data_return, this,[=](int _num) {
+            //            _num = _num - 1;
+            if(_num == 0)
+            {
+
+                Nthread_CommTask[0]->Send_finish=true;
+            }else if(_num == 1){
+                Nthread_CommTask[1]->Send_finish=true;
+            }else if(_num == 2){
+                Nthread_CommTask[2]->Send_finish=true;
+            }
+            qDebug()<<"Nthread_CommTask->Send_finish=true;"<<_num;
+        });
+        connect(Nthread_CommTask[0], &thread_CommTask::SendData_Board1, worker, &SerialPortWorker::writeData);
     }else if(portIndex == 2){
-        connect(Nthread_CommTask, &thread_CommTask::SendData_Board2, worker, &SerialPortWorker::writeData);
+        connect(worker, &SerialPortWorker::Data_return, this,[=](int _num) {
+            Nthread_CommTask[1]->Send_finish=true;
+            if(_num == 0)
+            {
+                Nthread_CommTask[0]->Send_finish=true;
+            }else if(_num == 1){
+                Nthread_CommTask[1]->Send_finish=true;
+            }else if(_num == 2){
+                Nthread_CommTask[2]->Send_finish=true;
+            }
+            qDebug()<<"Nthread_CommTask->Send_finish=true;"<<_num;
+        });
+        connect(Nthread_CommTask[1], &thread_CommTask::SendData_Board2, worker, &SerialPortWorker::writeData);
     }else if(portIndex == 3){
-        connect(Nthread_CommTask, &thread_CommTask::SendData_Board3, worker, &SerialPortWorker::writeData);
+        connect(worker, &SerialPortWorker::Data_return, this,[=](int _num) {
+            Nthread_CommTask[2]->Send_finish=true;
+            if(_num == 0)
+            {
+                Nthread_CommTask[0]->Send_finish=true;
+            }else if(_num == 1){
+                Nthread_CommTask[1]->Send_finish=true;
+            }else if(_num == 2){
+                Nthread_CommTask[2]->Send_finish=true;
+            }
+            qDebug()<<"Nthread_CommTask->Send_finish=true;"<<_num;
+        });
+        connect(Nthread_CommTask[2], &thread_CommTask::SendData_Board3, worker, &SerialPortWorker::writeData);
     }
     // 启动线程
     thread->start();
@@ -512,13 +629,13 @@ void MainWindow::Thread_Qtimer(int index)//控制线程是否启动定时
 {
     if(index == 1)
     {
-        PLC_Connet->ManualTimer->stop();
-        PLC_Connet->testTimer->start();
+        //        PLC_Connet->ManualTimer->stop();
+        //        PLC_Connet->testTimer->start();
     }
     else if(index == 2)
     {
-        PLC_Connet->ReadSetDataTimer->stop();
-        PLC_Connet->testTimer->start();
+        //        PLC_Connet->ReadSetDataTimer->stop();
+        //        PLC_Connet->testTimer->start();
     }
 }
 
@@ -1422,6 +1539,7 @@ void MainWindow::Update_show()
     ui->Auto_Blower_POS7_Value->setValue(QString::number(AutoDataValue[30]/100.0,'f',1).toFloat());//鼓风机7档电流值
     ui->Auto_Blower_POS8_Value->setValue(QString::number(AutoDataValue[31]/100.0,'f',1).toFloat());//鼓风机8档电流值
     ui->Auto_Blower_POS9_Value->setValue(QString::number(AutoDataValue[32]/100.0,'f',1).toFloat());//鼓风机9档电流值
+
     ui->Auto_Blower_POS1_Value_2->setValue(AutoDataValue[42]);//鼓风机1档电压值/转速值
     ui->Auto_Blower_POS2_Value_2->setValue(AutoDataValue[43]);//鼓风机2档电压值/转速值
     ui->Auto_Blower_POS3_Value_2->setValue(AutoDataValue[44]);//鼓风机3档电压值/转速值
@@ -1467,9 +1585,9 @@ void MainWindow::Update_show()
     
 
     
-//    ui->Auto_LIN1_1_NAD->setText(QString("%1").arg(AutoDataValue[183], 0, 16).toUpper());
-//    ui->Auto_LIN1_1_Controlid->setText(QString("%1").arg(AutoDataValue[184], 0, 16).toUpper());
-//    ui->Auto_LIN1_1_Stateid->setText(QString("%1").arg(AutoDataValue[185], 0, 16).toUpper());
+    //    ui->Auto_LIN1_1_NAD->setText(QString("%1").arg(AutoDataValue[183], 0, 16).toUpper());
+    //    ui->Auto_LIN1_1_Controlid->setText(QString("%1").arg(AutoDataValue[184], 0, 16).toUpper());
+    //    ui->Auto_LIN1_1_Stateid->setText(QString("%1").arg(AutoDataValue[185], 0, 16).toUpper());
 
     ui->Auto_Tem1->setStyleSheet(Button_background_color(AutoDataValue[595]));
     ui->Auto_Tem2->setStyleSheet(Button_background_color(AutoDataValue[596]));
@@ -5780,6 +5898,30 @@ void MainWindow::Data_Processing()//数据处理
     }
 }
 
+
+QString MainWindow::setled_Vibration(int result)
+{
+    QString result_color = "";
+    if(result == 0)
+    {
+        result_color = "";
+    }
+    else if(result == 1)
+    {
+
+        result_color = "background-color:  rgb(250, 250, 0);";
+    }
+    else if(result == 2)
+    {
+        result_color = "background-color:  rgb(0, 150, 0);";
+    }
+    else if(result == 3)
+    {
+        result_color = "background-color:  rgb(255, 40, 0);";
+    }
+    return result_color;
+}
+
 QString MainWindow::Button_background_color(int result)
 {
     QString result_color = "";
@@ -5790,10 +5932,35 @@ QString MainWindow::Button_background_color(int result)
     else if(result == 1)
     {
         result_color = "background-color:  rgb(0, 150, 0);";
+
     }
     else if(result == 2)
     {
+
         result_color = "background-color:  rgb(250, 250, 0);";
+    }
+    else if(result == 3)
+    {
+        result_color = "background-color:  rgb(255, 40, 0);";
+    }
+    return result_color;
+}
+
+QString MainWindow::Button_blower_background_color(int result)
+{
+    QString result_color = "";
+    if(result == 0)
+    {
+        result_color = "";
+    }
+    else if(result == 1)
+    {
+
+        result_color = "background-color:  rgb(250, 250, 0);";
+    }
+    else if(result == 2)
+    {
+        result_color = "background-color:  rgb(0, 150, 0);";
     }
     else if(result == 3)
     {
@@ -5817,7 +5984,7 @@ void MainWindow::UpdateTime()
 
 void MainWindow::on_actionPLC_triggered()
 {
-    PLC_Connet->show();
+    //    PLC_Connet->show();
 }
 
 
@@ -5826,9 +5993,9 @@ void MainWindow::on_actionSetPD_triggered()
 
     Data_Set->showMaximized();
     Data_Set->ui->SetMain_ReadMode->click();//读模式
-    PLC_Connet->testTimer->stop();
-    PLC_Connet->ManualTimer->stop();
-    PLC_Connet->ReadSetDataTimer->start(200);
+    //    PLC_Connet->testTimer->stop();
+    //    PLC_Connet->ManualTimer->stop();
+    //    PLC_Connet->ReadSetDataTimer->start(200);
 }
 
 
@@ -5836,9 +6003,9 @@ void MainWindow::on_actionHandMain_triggered()
 {
     
     Manualui_Main->showMaximized();
-    PLC_Connet->testTimer->stop();
-    PLC_Connet->ReadSetDataTimer->stop();
-    PLC_Connet->ManualTimer->start(100);
+    //    PLC_Connet->testTimer->stop();
+    //    PLC_Connet->ReadSetDataTimer->stop();
+    //    PLC_Connet->ManualTimer->start(100);
     
 }
 
@@ -5933,8 +6100,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     //    auto temp = QMessageBox::information(this,"提示","是否关闭软件",QMessageBox::Yes | QMessageBox::No);
     //    if(temp == QMessageBox::Yes)
     //    {
-    PLC_Connet->m_tcpSocket->close();
-    PLC_Connet->close();//鼓风机参数设置
+    //    PLC_Connet->m_tcpSocket->close();
+    //    PLC_Connet->close();//鼓风机参数设置
     Data_Set->close();//频道配置界面
     Manualui_Main->close();//手动界面
     showLogo->close();//联系我们界面
@@ -5969,154 +6136,72 @@ void MainWindow::on_LIN2_IDRead_clicked()
     qDebug()<<"点击屏幕LIN2.XID读取按钮";
 }
 
+void MainWindow::Start_reset_funtion()
+{
+    Slot_ShowUI_Step(0);
+    Slot_ShowUI_Results(0);
 
+}
 
 void MainWindow::on_Auto_Start_clicked()//启动
 {
-    if(1)//外部条件是否满足，满足则进入
+    if(!Nthread_main->KeyBoxStop_flag){
+    if(Nthread_main->read_state())
     {
+        Start_reset_funtion();
 
-        Start_Process = true;
+        check_time_Start();
+        Slot_ShowUI_Results(3);
+
+        Nthread_main->run_start();
+    }
+    else
+    {
+        qDebug()<<"设备正在运行";
+    }
     }
 
-    //        QString PD ="PD"+ ui->Auto_PDbox->currentText();
-    //        QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_Equence_Data.ini";
-    //        QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
-    //        INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
-    //        QString SequenceStr = INI_File->value(PD+"/Equence").toString();//获取运行顺序
-    //        // 移除空格并分割字符串
-    //        QStringList numberList = SequenceStr.remove(" ").split(",");
+//    qDebug()<<"点击屏幕启动按钮";
+}
+void MainWindow::on_MandatoryLetgo_clicked()
+{
 
-    //        // 存储数字位置的列表
-    //        //        QList<int> positionsOf1;
-    //        qDebug()<<numberList;
-    //        // 遍历查找数字位置（从1开始计数）
-    //        for (int i = 0; i < numberList.size(); ++i)
-    //        {
-    //            if (numberList[i] == "1")
-    //            {
-    //                if(i<12)//电机Mi为第一顺序
-    //                {
-    //                    //emit Start_PTMotor();//启动对应的电机
-    //                }
-    //                else if(i == 12)//Lin电机第一顺序
-    //                {
-    //                    //emit Start_LINMotor();//启动Lin电机
-    //                }
-    //                else if(i == 13)//鼓风机第一顺序
-    //                {
-    //                    //emit Start_Blower();//鼓风机
-    //                }
-    //                else if(i == 14)//温敏第一顺序
-    //                {
-    //                    //emit Start_Res();//启动温敏
-    //                }
-    //                else if(i == 15)//负离子第一顺序
-    //                {
-    //                    //emit Start_FLZ();//启动负离子
-    //                }
-    //                else if(i == 16)//AQS第一顺序
-    //                {
-    //                    //emit Start_AQS();//启动AQS
-    //                }
-    //                else if(i == 17)//PM2.5第一顺序
-    //                {
-    //                    //emit Start_PM25();//启动PM2.5
-    //                }
-    //                else if(i == 18)//PTC第一顺序
-    //                {
-    //                    //emit Start_PTC();//启动PTC
-    //                }
+    if(!Nthread_main->KeyBoxStop_flag){
+        check_time_flag = false;
+        Slot_ShowUI_Results(4);
+        Nthread_main->run_stop();
+    }
 
-    //            }
-    //        }
 
-    //        if(1)//判断所有为1的检测步骤完成信号
-    //        {
-    //            for (int i = 0; i < numberList.size(); ++i)
-    //            {
-    //                if (numberList[i] == "2")
-    //                {
-    //                    if(i<12)//电机Mi为第一顺序
-    //                    {
-    //                        //emit Start_PTMotor();//启动对应的电机
-    //                    }
-    //                    else if(i == 12)//Lin电机第一顺序
-    //                    {
-    //                        //emit Start_LINMotor();//启动Lin电机
-    //                    }
-    //                    else if(i == 13)//鼓风机第一顺序
-    //                    {
-    //                        //emit Start_Blower();//鼓风机
-    //                    }
-    //                    else if(i == 14)//温敏第一顺序
-    //                    {
-    //                        //emit Start_Res();//启动温敏
-    //                    }
-    //                    else if(i == 15)//负离子第一顺序
-    //                    {
-    //                        //emit Start_FLZ();//启动负离子
-    //                    }
-    //                    else if(i == 16)//AQS第一顺序
-    //                    {
-    //                        //emit Start_AQS();//启动AQS
-    //                    }
-    //                    else if(i == 17)//PM2.5第一顺序
-    //                    {
-    //                        //emit Start_PM25();//启动PM2.5
-    //                    }
-    //                    else if(i == 18)//PTC第一顺序
-    //                    {
-    //                        //emit Start_PTC();//启动PTC
-    //                    }
+//    qDebug()<<"点击屏幕停止按钮";
+}
+void MainWindow::on_Auto_Reset_clicked()
+{
+    if(!Nthread_main->KeyBoxStop_flag){
+        Nthread_main->run_stop();
+//        setFinishResult(3);
 
-    //                }
-    //            }
-    //        }
-    //        if(1)//判断所有为2的检测步骤完成信号
-    //        {
-    //            for (int i = 0; i < numberList.size(); ++i)
-    //            {
-    //                if (numberList[i] == "3")
-    //                {
-    //                    if(i<12)//电机Mi为第一顺序
-    //                    {
-    //                        //emit Start_PTMotor();//启动对应的电机
-    //                    }
-    //                    else if(i == 12)//Lin电机第一顺序
-    //                    {
-    //                        //emit Start_LINMotor();//启动Lin电机
-    //                    }
-    //                    else if(i == 13)//鼓风机第一顺序
-    //                    {
-    //                        //emit Start_Blower();//鼓风机
-    //                    }
-    //                    else if(i == 14)//温敏第一顺序
-    //                    {
-    //                        //emit Start_Res();//启动温敏
-    //                    }
-    //                    else if(i == 15)//负离子第一顺序
-    //                    {
-    //                        //emit Start_FLZ();//启动负离子
-    //                    }
-    //                    else if(i == 16)//AQS第一顺序
-    //                    {
-    //                        //emit Start_AQS();//启动AQS
-    //                    }
-    //                    else if(i == 17)//PM2.5第一顺序
-    //                    {
-    //                        //emit Start_PM25();//启动PM2.5
-    //                    }
-    //                    else if(i == 18)//PTC第一顺序
-    //                    {
-    //                        //emit Start_PTC();//启动PTC
-    //                    }
+        //复位界面显示的东西
 
-    //                }
-    //            }
-    //        }
+        Nthread_linmotor->resetStatus();
+        m_Blower->slot_Blower_ResetVars();
+        Nthread_Thermistor->resetStatus();
+        Nthread_ptmotor->ResetDisplayData();
 
-    qDebug()<<"点击屏幕启动按钮";
+        Start_reset_funtion();
+
+        check_time_reset();
+    //    check_time_Start();
+        Slot_ShowUI_Results(0);
+
+    //    qDebug()<<"点击屏幕复位按钮";
+    }
+
+}
+void MainWindow::check_time_reset(){
+    check_time_flag = false;
+    check_time = 0;
+    ui->Auto_CheckTime->setValue(QString::number(check_time/10.0,'f',1).toFloat());//检测时间
 }
 
 void MainWindow::Process_Initiation()
@@ -6189,11 +6274,7 @@ void MainWindow::Process_Initiation()
     }
 }
 
-void MainWindow::on_Auto_Reset_clicked()
-{
-    qDebug()<<"点击屏幕复位按钮";
 
-}
 
 
 void MainWindow::on_Auto_ManualNG_clicked()
@@ -6317,6 +6398,7 @@ QList<PTMotorFP_Setting_basis> readPTMotorSettingsFromIni(QString channel)//读�
         motorSetting.m_line2MotorRunTime = settings.value(motorPrefix + "_Line2Motor_RunTime", 0).toDouble();          //两线电机运行时间
         motorSetting.m_voltageAvgCount = static_cast<int>(settings.value(motorPrefix + "_voltageAvgCount").toInt());   // 默认电压平均次数
         motorSetting.m_currentAvgCount = static_cast<int>(settings.value(motorPrefix + "_currentAvgCount").toInt());  // 默认电流平均次数
+
         PTmotorSettingsList.append(motorSetting);
     }
 
@@ -6437,6 +6519,7 @@ QList<LINMotorFP_Setting_basis> readLINMotorSettingsFromIni(QString channel)//�
     settings.endGroup();
     return LINmotorSettingsList;
 }
+/*
 QList<LINMotorFP_Setting_basis1> readLINMotorSettingsFromIni1(QString channel)//读取LIN电机参数上下限
 {
     LINmotorSettingsList1.clear();
@@ -6480,123 +6563,125 @@ QList<LINMotorFP_Setting_basis1> readLINMotorSettingsFromIni1(QString channel)//
 
     settings.endGroup();
     return LINmotorSettingsList1;
-}
+}*/
 
-QList<Blower_Setting_basis> readBlowerSettingsFromIni(QString channel)//读取鼓风机参数
+Blower_Setting_basis readBlowerSettingsFromIni(QString channel)//读取鼓风机参数
 {
-    BlowerSettingsList.clear();
+    //    BlowerSettingsList.clear();
     QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_Blower_Data.ini";
     QSettings settings(path, QSettings::IniFormat);
     settings.setIniCodec(QTextCodec::codecForName("GB2312"));
     settings.beginGroup(channel);
     Blower_Setting_basis motorSetting;
-    if(settings.value(channel+"/Blower_Enable").toInt()==1)
+    if(settings.value("Blower_Enable").toInt()==1)
     {
         motorSetting.m_BlowerEnabled = true;
     }
 
-    motorSetting.m_BlowerMode = settings.value(channel+"/Blower_Mode").toInt();
-    motorSetting.m_BlowerPowervoltageUP = settings.value(channel+"/Blower_V_Max").toDouble()*1000;
-    motorSetting.m_BlowerPowervoltageDown = settings.value(channel+"/Blower_V_Min").toDouble()*1000;
-    motorSetting.m_BlowerRate = settings.value(channel+"/Blower_PWM_HZ").toInt();
-    motorSetting.m_LINBlowerControlid= settings.value(channel+"/LINBlower_Controlid").toString();
-    motorSetting.m_LINBlowerStateid= settings.value(channel+"/LINBlower_Stateid").toString();
-    motorSetting.m_LINBlowerSendid  = settings.value(channel+"/LINBlower_Send_ID").toString();
-    motorSetting.m_LINBlowerReadid  = settings.value(channel+"/LINBlower_Read_ID").toString();
-    if(settings.value(channel+"/Blower_Enable").toInt()==1)
+    motorSetting.m_BlowerMode = settings.value("Blower_Mode").toInt();
+    motorSetting.m_BlowerPowervoltageUP = settings.value("Blower_V_Max").toDouble()*1000;
+    motorSetting.m_BlowerPowervoltageDown = settings.value("Blower_V_Min").toDouble()*1000;
+    motorSetting.m_BlowerRate = settings.value("Blower_PWM_HZ").toInt();
+    motorSetting.m_LINBlowerControlid= settings.value("LINBlower_Controlid").toString();
+    motorSetting.m_LINBlowerStateid= settings.value("LINBlower_Stateid").toString();
+    motorSetting.m_LINBlowerSendid  = settings.value("LINBlower_Send_ID").toString();
+    motorSetting.m_LINBlowerReadid  = settings.value("LINBlower_Read_ID").toString();
+    motorSetting.m_BlowerStartDelay  = settings.value("Blower_Start_Delay").toString();
+
+    if(settings.value("Blower_Enable").toInt()==1)
     {
         motorSetting.m_LINBlowerSpeed_Compare = true;
     }
-    motorSetting.m_LINBlowerErrorValue= settings.value(channel+"/LINBlower_error").toInt();
-    if(settings.value(channel+"/X_vibration_Enable").toInt()==1)
+    motorSetting.m_LINBlowerErrorValue= settings.value("LINBlower_error").toInt();
+
+    if(settings.value("X_vibration_Enable").toInt()==1)
     {
         motorSetting.m_X_vibration_Enable = true;
     }
-    if(settings.value(channel+"/Y_vibration_Enable").toInt()==1)
+    if(settings.value("Y_vibration_Enable").toInt()==1)
     {
         motorSetting.m_Y_vibration_Enable = true;
     }
-    if(settings.value(channel+"/Z_vibration_Enable").toInt()==1)
+    if(settings.value("Z_vibration_Enable").toInt()==1)
     {
         motorSetting.m_Z_vibration_Enable = true;
     }
-    if(settings.value(channel+"/Noises_Enable").toInt()==1)
+    if(settings.value("Noises_Enable").toInt()==1)
     {
         motorSetting.m_Noises_Enable = true;
     }
-    motorSetting.m_vibration_StartDelay= settings.value(channel+"/Vibration_Delay").toDouble()*1000;
-    motorSetting.m_vibration_DelayAlarm= settings.value(channel+"/Vibration_CheckTime").toDouble()*1000;
-    motorSetting.m_Noises_StartDelay= settings.value(channel+"/Noises_Delay").toDouble()*1000;
-    motorSetting.m_Noises_DelayAlarm= settings.value(channel+"/Noises_CheckTime").toDouble()*1000;
-
-
-
-    BlowerSettingsList.append(motorSetting);
-
-
+    motorSetting.m_vibration_StartDelay= settings.value("Vibration_Delay").toDouble()*1000;
+    motorSetting.m_vibration_DelayAlarm= settings.value("Vibration_CheckTime").toDouble()*1000;
+    motorSetting.m_Noises_StartDelay= settings.value("Noises_Delay").toDouble()*1000;
+    motorSetting.m_Noises_DelayAlarm= settings.value("Noises_CheckTime").toDouble()*1000;
 
     settings.endGroup();
-    return BlowerSettingsList;
+
+    settings.destroyed();
+
+
+    return motorSetting;
 }
-QList<Blower_Setting_basis1> readBlowerSettingsFromIni1(QString channel)//读取鼓风机上下限参数
+Blower_Setting_basis1 readBlowerSettingsFromIni1(QString channel)//读取鼓风机上下限参数
 {
-    BlowerSettingsList1.clear();
     QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_Blower_Data.ini";
     QSettings settings(path, QSettings::IniFormat);
     settings.setIniCodec(QTextCodec::codecForName("GB2312"));
+
     settings.beginGroup(channel);
     Blower_Setting_basis1 motorSetting;
-    motorSetting.m_POS = settings.value(channel+"/Blower_Step").toString();
-    if(settings.value(channel+"/Blower_Mode").toInt()==1)
-    {
-        motorSetting.m_Type = QString::number(1);
-        QString stepStr = settings.value(channel+"/Blower_Step").toString();
-        QString ValueStr = settings.value(channel+"/VoltageBlower_Voltage").toString();
-        QString TimeStr = settings.value(channel+"/VoltageBlower_Time").toString();
-        QString MaxValueStr = settings.value(channel+"/VoltageBlower_MaxA").toString();
-        QString MinValueStr = settings.value(channel+"/VoltageBlower_MinA").toString();
+    motorSetting.m_POS = settings.value("Blower_Step").toString();
 
-        // 将字符串分割为列表
-        QStringList stepList = stepStr.split(",");
-        QStringList ValueList = ValueStr.split(",");
-        QStringList TimeList = TimeStr.split(",");
-        QStringList MaxValueList = MaxValueStr.split(",");
-        QStringList MinValueList = MinValueStr.split(",");
-        // 生成重新排序后的字符串
-        QStringList newValueList;
-        QStringList newTimeList;
-        QStringList newMaxValueList;
-        QStringList newMinValueList;
-        foreach (QString step, stepList) {
-            bool ok;
-            int index = step.toInt(&ok) - 1; // Step从1开始，列表索引从0开始
-            if (ok && index >= 0 && index < stepList.size()) {
-                newValueList.append(ValueList.at(index));
-                newTimeList.append(TimeList.at(index));
-                newMaxValueList.append(MaxValueList.at(index));
-                newMinValueList.append(MinValueList.at(index));
-            } else {
-                // 处理无效索引的情况，这里添加空字符串作为占位符
-                newValueList.append("");
-                newTimeList.append("");
-                newMaxValueList.append("");
-                newMinValueList.append("");
-            }
-        }
-        motorSetting.m_Value = newValueList.join(",");
-        motorSetting.m_Time = newTimeList.join(",");
-        motorSetting.m_BlowerMaxValue = newMaxValueList.join(",");
-        motorSetting.m_BlowerMinValue = newMinValueList.join(",");
-
-    }
-    else if(settings.value(channel+"/Blower_Mode").toInt()==2)
+    if(settings.value("Blower_Mode").toInt()==2)
     {
         motorSetting.m_Type = QString::number(2);
-        QString stepStr = settings.value(channel+"/Blower_Step").toString();
-        QString ValueStr = settings.value(channel+"/PWMBlower_PWM").toString();
-        QString TimeStr = settings.value(channel+"/PWMBlower_Time").toString();
-        QString MaxValueStr = settings.value(channel+"/PWMBlower_MaxA").toString();
-        QString MinValueStr = settings.value(channel+"/PWMBlower_MinA").toString();
+        QString stepStr = settings.value("Blower_Step").toString();
+        QString ValueStr = settings.value("VoltageBlower_Voltage").toString();
+        QString TimeStr = settings.value("VoltageBlower_Time").toString();
+        QString MaxValueStr = settings.value("VoltageBlower_MaxA").toString();
+        QString MinValueStr = settings.value("VoltageBlower_MinA").toString();
+
+        // 将字符串分割为列表
+        QStringList stepList = stepStr.split(",");
+        QStringList ValueList = ValueStr.split(",");
+        QStringList TimeList = TimeStr.split(",");
+        QStringList MaxValueList = MaxValueStr.split(",");
+        QStringList MinValueList = MinValueStr.split(",");
+        // 生成重新排序后的字符串
+        QStringList newValueList;
+        QStringList newTimeList;
+        QStringList newMaxValueList;
+        QStringList newMinValueList;
+        foreach (QString step, stepList) {
+            bool ok;
+            int index = step.toInt(&ok) - 1; // Step从1开始，列表索引从0开始
+            if (ok && index >= 0 && index < stepList.size()) {
+                newValueList.append(ValueList.at(index));
+                newTimeList.append(TimeList.at(index));
+                newMaxValueList.append(MaxValueList.at(index));
+                newMinValueList.append(MinValueList.at(index));
+            } else {
+                // 处理无效索引的情况，这里添加空字符串作为占位符
+                newValueList.append("");
+                newTimeList.append("");
+                newMaxValueList.append("");
+                newMinValueList.append("");
+            }
+        }
+        motorSetting.m_Value = newValueList.join(",");
+        motorSetting.m_Time = newTimeList.join(",");
+        motorSetting.m_BlowerMaxValue = newMaxValueList.join(",");
+        motorSetting.m_BlowerMinValue = newMinValueList.join(",");
+
+    }
+    else if(settings.value("Blower_Mode").toInt()==1)
+    {
+        motorSetting.m_Type = QString::number(1);
+        QString stepStr = settings.value("Blower_Step").toString();
+        QString ValueStr = settings.value("PWMBlower_PWM").toString();
+        QString TimeStr = settings.value("PWMBlower_Time").toString();
+        QString MaxValueStr = settings.value("PWMBlower_MaxA").toString();
+        QString MinValueStr = settings.value("PWMBlower_MinA").toString();
         // 将字符串分割为列表
         QStringList stepList = stepStr.split(",");
         QStringList ValueList = ValueStr.split(",");
@@ -6629,14 +6714,14 @@ QList<Blower_Setting_basis1> readBlowerSettingsFromIni1(QString channel)//读取
         motorSetting.m_BlowerMaxValue = newMaxValueList.join(",");
         motorSetting.m_BlowerMinValue = newMinValueList.join(",");
     }
-    else if(settings.value(channel+"/Blower_Mode").toInt()==3)
+    else if(settings.value("Blower_Mode").toInt()==3)
     {
         motorSetting.m_Type = QString::number(3);
-        QString stepStr = settings.value(channel+"/Blower_Step").toString();
-        QString ValueStr = settings.value(channel+"/LINBlower_LIN").toString();
-        QString TimeStr = settings.value(channel+"/LINBlower_Time").toString();
-        QString MaxValueStr = settings.value(channel+"/LINBlower_MaxA").toString();
-        QString MinValueStr = settings.value(channel+"/LINBlower_MinA").toString();
+        QString stepStr = settings.value("Blower_Step").toString();
+        QString ValueStr = settings.value("LINBlower_LIN").toString();
+        QString TimeStr = settings.value("LINBlower_Time").toString();
+        QString MaxValueStr = settings.value("LINBlower_MaxA").toString();
+        QString MinValueStr = settings.value("LINBlower_MinA").toString();
         // 将字符串分割为列表
         QStringList stepList = stepStr.split(",");
         QStringList ValueList = ValueStr.split(",");
@@ -6670,15 +6755,15 @@ QList<Blower_Setting_basis1> readBlowerSettingsFromIni1(QString channel)//读取
         motorSetting.m_BlowerMinValue = newMinValueList.join(",");
     }
 
-    QString stepStr = settings.value(channel+"/Blower_Step").toString();
-    QString XVibrationMaxValue = settings.value(channel+"/XVibration_MaxValue").toString();
-    QString XVibrationMinValue = settings.value(channel+"/XVibration_MinValue").toString();
-    QString YVibrationMaxValue = settings.value(channel+"/YVibration_MaxValue").toString();
-    QString YVibrationMinValue = settings.value(channel+"/YVibration_MinValue").toString();
-    QString ZVibrationMaxValue = settings.value(channel+"/ZVibration_MaxValue").toString();
-    QString ZVibrationMinValue = settings.value(channel+"/ZVibration_MinValue").toString();
-    QString NoisesMaxValue = settings.value(channel+"/Noises_MaxValue").toString();
-    QString NoisesMinValue = settings.value(channel+"/Noises_MinValue").toString();
+    QString stepStr = settings.value("Blower_Step").toString();
+    QString XVibrationMaxValue = settings.value("XVibration_MaxValue").toString();
+    QString XVibrationMinValue = settings.value("XVibration_MinValue").toString();
+    QString YVibrationMaxValue = settings.value("YVibration_MaxValue").toString();
+    QString YVibrationMinValue = settings.value("YVibration_MinValue").toString();
+    QString ZVibrationMaxValue = settings.value("ZVibration_MaxValue").toString();
+    QString ZVibrationMinValue = settings.value("ZVibration_MinValue").toString();
+    QString NoisesMaxValue = settings.value("Noises_MaxValue").toString();
+    QString NoisesMinValue = settings.value("Noises_MinValue").toString();
     // 将字符串分割为列表
     QStringList stepList = stepStr.split(",");
     QStringList XVibrationMaxValueList = XVibrationMaxValue.split(",");
@@ -6698,18 +6783,19 @@ QList<Blower_Setting_basis1> readBlowerSettingsFromIni1(QString channel)//读取
     QStringList newZVibrationMinValueList;
     QStringList newNoisesMaxValueList ;
     QStringList newNoisesMinValueList ;
+
     foreach (QString step, stepList) {
         bool ok;
         int index = step.toInt(&ok) - 1; // Step从1开始，列表索引从0开始
         if (ok && index >= 0 && index < stepList.size()) {
-            newXVibrationMaxValueList.append(newXVibrationMaxValueList.at(index));
-            newXVibrationMinValueList.append(newXVibrationMinValueList.at(index));
-            newYVibrationMaxValueList.append(newYVibrationMaxValueList.at(index));
-            newYVibrationMinValueList.append(newYVibrationMinValueList.at(index));
-            newZVibrationMaxValueList.append(newZVibrationMaxValueList.at(index));
-            newZVibrationMinValueList.append(newZVibrationMinValueList.at(index));
-            newNoisesMaxValueList.append(newNoisesMaxValueList.at(index));
-            newNoisesMinValueList.append(newNoisesMinValueList.at(index));
+            newXVibrationMaxValueList.append(XVibrationMaxValueList.at(index));
+            newXVibrationMinValueList.append(XVibrationMinValueList.at(index));
+            newYVibrationMaxValueList.append(YVibrationMaxValueList.at(index));
+            newYVibrationMinValueList.append(YVibrationMinValueList.at(index));
+            newZVibrationMaxValueList.append(ZVibrationMaxValueList.at(index));
+            newZVibrationMinValueList.append(ZVibrationMinValueList.at(index));
+            newNoisesMaxValueList.append(NoisesMaxValueList.at(index));
+            newNoisesMinValueList.append(NoisesMinValueList.at(index));
         } else {
             // 处理无效索引的情况，这里添加空字符串作为占位符
             newXVibrationMaxValueList.append("");
@@ -6731,10 +6817,229 @@ QList<Blower_Setting_basis1> readBlowerSettingsFromIni1(QString channel)//读取
     motorSetting.m_NoisesMaxValue = newNoisesMaxValueList.join(",");
     motorSetting.m_NoisesMinValue = newNoisesMinValueList.join(",");
 
+    settings.endGroup();
+
+    settings.destroyed();
+    return motorSetting;
+}
+
+QList<QList<LINMotorFP_Setting_basis1>> readLINMotorSettingsFromIniData(QString channel)//读取LIN电机参数上下限
+{
+    //    LINmotorSettingsList2.clear();
+    LINmotorSettingsList1.clear();
+
+    QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_LIN_Data.ini";
+    QSettings settings(path, QSettings::IniFormat);
+    settings.setIniCodec(QTextCodec::codecForName("GB2312"));
+    settings.beginGroup(channel);
+
+    // 读取12个电机的配置
+    for (int motorNum = 1; motorNum <= 12; ++motorNum)
+    {
+
+        QString motorPrefix = QString("LIN1_%1").arg(motorNum);
+        LINMotorFP_Setting_basis1 motorSetting;
+        QString stepStr = settings.value(motorPrefix + "_Step").toString();
+        motorSetting.m_POS = stepStr;//原顺序
+        QString ValueStr = settings.value(motorPrefix + "_POS_Value").toString();
+        // 将字符串分割为列表
+        QStringList stepList = stepStr.split(",");
+        QStringList ValueList = ValueStr.split(",");
+        // 生成重新排序后的字符串
+        QStringList newValueList;
+        foreach (QString step, stepList) {
+            bool ok;
+            int index = step.toInt(&ok) - 1; // Step从1开始，列表索引从0开始
+            if (ok && index >= 0 && index < ValueList.size()) {
+                newValueList.append(ValueList.at(index));
+            } else {
+                // 处理无效索引的情况，这里添加空字符串作为占位符
+                newValueList.append("");
+            }
+        }
+
+        motorSetting.m_Value = newValueList.join(",");
+
+        motorSetting.m_Time = settings.value(motorPrefix + "_Time").toString();
+        motorSetting.m_LINName = settings.value(motorPrefix + "_LINName").toString();
+
+
+        QStringList POSList = motorSetting.m_POS.split(",");//把POS分割
+        QStringList Value1List = motorSetting.m_Value.split(",");
+        QStringList TimeList = motorSetting.m_Time.split(",");
+        //        QStringList LINNameList = motorSetting.m_LINName.split(",");
+        qDebug()<<POSList.count()<<Value1List.count()<<TimeList.count();
+        LINmotorSettingsList2.clear();
+        for(int j=0;j<POSList.count();j++)
+        {
+            LINMotorFP_Setting_basis1 motorSetting1;
+            motorSetting1 .m_POS =  POSList.at(j);
+            motorSetting1.m_Value  = Value1List.at(j);
+            motorSetting1.m_LINName = settings.value(motorPrefix + "_LINName").toString();
+            if(j<7)
+            {
+                motorSetting1.m_Time = TimeList.at(j);
+            }
+            else
+            {
+                motorSetting1.m_Time = "0";
+            }
+
+            //            LINmotorSettingsList2.clear();
+            LINmotorSettingsList2.append(motorSetting1);
+        }
+
+        LINmotorSettingsList1.append(LINmotorSettingsList2);
+    }
 
     settings.endGroup();
-    return BlowerSettingsList1;
+    return LINmotorSettingsList1;
 }
+
+
+QList<ToralThermistor_Setting_basis> readRESSettingsFromIni(QString channel)
+{
+    ResSettingsList.clear();
+    QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_ResSpeed_Data.ini";
+    QSettings settings(path, QSettings::IniFormat);
+    settings.setIniCodec(QTextCodec::codecForName("GB2312"));
+//    settings.beginGroup(channel);
+    for(int i=0;i<3;i++)
+    {
+        ToralThermistor_Setting_basis ResSetting;
+        ResSetting.Compare_Enable = settings.value(channel+"/ResSurroundings").toBool();
+        ResSetting.RunTime = (settings.value(channel+"/Res_CheckTime").toFloat() * 10);
+        ResSetting.DelayTime = (settings.value(channel+"/Res_StartDelay").toFloat() * 10);
+        ResSetting.m_Borad = i+2;
+        ResSetting.temperature_Err = settings.value(channel+"/Res_Tem_error").toDouble();
+
+
+
+
+
+        ResSettingsList.append(ResSetting);
+    }
+
+    return ResSettingsList;
+}
+
+QList<QList<Thermistor_Setting_basis>> readRESSettingsFromIni1(QString channel)
+{
+    ResSettingsList1.clear();
+    ResSettingsList2.clear();
+    QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_ResSpeed_Data.ini";
+    QSettings settings(path, QSettings::IniFormat);
+    settings.setIniCodec(QTextCodec::codecForName("GB2312"));
+    //    settings.beginGroup(channel);
+    qDebug()<<channel+"/Res_Enable"<<settings.value(channel+"/Res_Enable").toString();
+
+    QString Res_Enable = settings.value(channel+"/Res_Enable").toString();
+
+    QString Res_PosName = settings.value(channel+"/Res_PosName").toString();
+    QString Res_Temp = settings.value(channel+"/Res_Temp").toString();
+    QString Res_Value = settings.value(channel+"/Res_Value").toString();
+    QString Res_MaterialConstant = settings.value(channel+"/Res_MaterialConstant").toString();
+    QString Res_MaxValue = settings.value(channel+"/Res_MaxValue").toString();
+    QString Res_MinValue = settings.value(channel+"/Res_MinValue").toString();
+    qDebug()<<"11111111111111"<<Res_Enable;
+
+    QStringList Res_EnableList = Res_Enable.split(",");//温敏电阻使能
+    QStringList Res_PosNameList = Res_PosName.split(",");
+    QStringList Res_TempList = Res_Temp.split(",");
+    QStringList Res_ValueList = Res_Value.split(",");
+    QStringList Res_MaterialConstantList = Res_MaterialConstant.split(",");
+    QStringList Res_MaxValueList = Res_MaxValue.split(",");
+    QStringList Res_MinValueList = Res_MinValue.split(",");
+
+
+    for(int i =0;i<15;i++)
+    {
+        Thermistor_Setting_basis ResSetting1;
+        if(i<5)
+        {
+            ResSetting1.Environment = Res_EnableList.last().toInt();
+            qDebug()<<"温敏电阻使能数量："<<Res_EnableList.count();
+            if(Res_EnableList.at(i).toInt()==1)
+            {
+                ResSetting1.Temperature_Enable = true;
+            }
+            else
+            {
+                ResSetting1.Temperature_Enable = false;
+            }
+            ResSetting1.RC = Res_TempList.at(i).toDouble();
+            ResSetting1.Beta = Res_MaterialConstantList.at(i).toDouble();
+            ResSetting1.R25 = Res_ValueList.at(i).toDouble();
+            ResSetting1.Temperature_upper = Res_MaxValueList.at(i).toDouble();
+            ResSetting1.Temperature_lower = Res_MinValueList.at(i).toDouble();
+            ResSettingsList1.append(ResSetting1);
+        }
+        else if(i<10)
+        {
+            ResSetting1.Environment = Res_EnableList.last().toInt();
+            if(Res_EnableList.at(i).toInt()==1)
+            {
+                ResSetting1.Temperature_Enable = true;
+            }
+            else
+            {
+                ResSetting1.Temperature_Enable = false;
+            }
+            ResSetting1.RC = Res_TempList.at(i).toDouble();
+            ResSetting1.Beta = Res_MaterialConstantList.at(i).toDouble();
+            ResSetting1.R25 = Res_ValueList.at(i).toDouble();
+            ResSetting1.Temperature_upper = Res_MaxValueList.at(i).toDouble();
+            ResSetting1.Temperature_lower = Res_MinValueList.at(i).toDouble();
+            ResSettingsList1.append(ResSetting1);
+        }
+        else if(i<15)
+        {
+            ResSetting1.Environment = Res_EnableList.last().toInt();
+            qDebug()<<"温敏电阻使能数量："<<Res_EnableList.count();
+            if(i>11)
+            {
+                ResSetting1.Temperature_Enable = false;
+                ResSetting1.RC = 0;
+                ResSetting1.Beta = 0;
+                ResSetting1.R25 = 0;
+                ResSetting1.Temperature_upper = 0;
+                ResSetting1.Temperature_lower = 0;
+            }
+            else
+            {
+                if(Res_EnableList.at(i).toInt()==1)
+                {
+                    ResSetting1.Temperature_Enable = true;
+                }
+                else
+                {
+                    ResSetting1.Temperature_Enable = false;
+                }
+
+                ResSetting1.RC = Res_TempList.at(i).toDouble();
+                ResSetting1.Beta = Res_MaterialConstantList.at(i).toDouble();
+                ResSetting1.R25 = Res_ValueList.at(i).toDouble();
+                ResSetting1.Temperature_upper = Res_MaxValueList.at(i).toDouble();
+                ResSetting1.Temperature_lower = Res_MinValueList.at(i).toDouble();
+
+            }
+            ResSettingsList1.append(ResSetting1);
+        }
+
+
+        if(i == 4 || i == 9 || i == 14){
+            ResSettingsList2.append(ResSettingsList1);
+            ResSettingsList1.clear();
+        }
+
+    }
+
+    return ResSettingsList2 ;
+}
+
+
+
+
 
 
 
@@ -6744,18 +7049,89 @@ void MainWindow::on_Auto_PDbox_currentTextChanged(const QString &arg1)//界面�
     readPTMotorSettingsFromIni(PD);
 
     readPTMotorSettingsFromIni1(PD);
-//    for (int i=0;i<PTmotorSettingsList1.count();i++ ) {
-//      qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_POS;
-//      qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_MaxValue;
-//       qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_MinValue;
-//    }
+    //    for (int i=0;i<PTmotorSettingsList1.count();i++ ) {
+    //      qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_POS;
+    //      qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_MaxValue;
+    //       qDebug()<<"-------------------"<<PTmotorSettingsList1.at(i).m_MinValue;
+    //    }
+
 
     readLINMotorSettingsFromIni(PD);
-    readLINMotorSettingsFromIni1(PD);
-    readBlowerSettingsFromIni(PD);
-    readBlowerSettingsFromIni1(PD);
-    PTworker->setPTMotorSettings(PTmotorSettingsList);
-    PTworker->setPTMotorSettings1(PTmotorSettingsList1);
+
+    readLINMotorSettingsFromIniData(PD);
+
+    readRESSettingsFromIni(PD);
+
+    readRESSettingsFromIni1(PD);
+
+    Nthread_ptmotor->setPTMotorSettings(PTmotorSettingsList);
+    Nthread_ptmotor->setPTMotorSettings1(PTmotorSettingsList1);
+
+
+
+
+
+    QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_Equence_Data.ini";
+    qDebug()<<path;
+    QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
+    INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
+    QString SequenceStr = INI_File->value(PD+"/Equence").toString();//获取运行顺序
+    qDebug()<<"当前设置运行顺序"<<SequenceStr;
+    // 移除空格并分割字符串
+    Nthread_main->m_stepOrderList = SequenceStr.remove(" ").split(",");
+    qDebug()<<"执行顺序："<<Nthread_main->m_stepOrderList;
+    //    INI_File->clear();
+
+    MY_LINMotorIP_Setting_basis lin_fp;
+    QList<MY_LINMotorIP_Setting_basis> lin_fp_qlist;
+    QList<QList<MY_LINMotorIP_Setting_basis>> lin_fp_basis;//需移到其他地方并初始化赋值
+    double doubleValue;
+
+
+
+
+    //    qDebug()<<"当前列表数据有111"<<LINmotorSettingsList1[0][1].m_POS;
+    bool ok;
+    qDebug()<<"刘保存Lin电机参数";
+    for(int i = 0; i < LINMotor_Count; i++)
+    {
+        for(int j = 0; j < 8; j++)
+        {
+            lin_fp.process = LINmotorSettingsList1[i][j].m_POS.toInt(&ok);
+            //            qDebug()<<lin_fp.process<<LINmotorSettingsList1[i][j].m_POS;
+            lin_fp.m_motortargetStep = LINmotorSettingsList1[i][j].m_Value.toInt(&ok);
+            //            qDebug()<<lin_fp.m_motortargetStep;
+            lin_fp.m_motorSetStep = 0;
+
+            doubleValue = LINmotorSettingsList1[i][j].m_Time.toDouble();
+            lin_fp.m_stopTime = static_cast<int>(doubleValue * 10);
+
+
+            //            qDebug()<<lin_fp.m_stopTime;
+
+            lin_fp_qlist.insert(j,lin_fp);
+        }
+        lin_fp_basis.insert(i,lin_fp_qlist);
+    }
+
+    Nthread_linmotor->SetLINMotor_ProcessSet(lin_fp_basis);
+
+    //鼓风机参数
+    mBlowerSettingsList = readBlowerSettingsFromIni(PD);
+    mBlowerSettingsList1 = readBlowerSettingsFromIni1(PD);
+    //    emit sign_BlowerFixedPar(mBlowerSettingsList, mBlowerSettingsList1);
+    m_Blower->slot_BlowerFixedPar(mBlowerSettingsList, mBlowerSettingsList1);
+
+
+    //温敏参数---------------------------------------------------------------
+
+
+        Nthread_Thermistor->SetToralThermistorBorad_Setting(ResSettingsList);
+
+    //----------------------------------------------------------------------
+
+    lin_fp_qlist.clear();
+    lin_fp_basis.clear();
 }
 
 QList<int> MainWindow::getOpenedSerialPorts() const
@@ -6829,7 +7205,7 @@ void MainWindow::on_Btn_test1_clicked()
 
 void MainWindow::on_actionMain_triggered()
 {
-     ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 
@@ -6837,6 +7213,223 @@ void MainWindow::on_Btn_test2_clicked()
 {
 
     emit testRunMotor(ui->lineEdit->text());
+}
+
+/*
+* @description 界面控件重新定义
+* @param { } 无
+* @returns {void} 无
+* @date 2025-10-28 20:21:00
+* @author zh
+*/
+void MainWindow::initUIControlArrays()
+{
+    Auto_Blower_button[0] = ui->Auto_Blower_POS1;
+    Auto_Blower_button[1] = ui->Auto_Blower_POS2;
+    Auto_Blower_button[2] = ui->Auto_Blower_POS3;
+    Auto_Blower_button[3] = ui->Auto_Blower_POS4;
+    Auto_Blower_button[4] = ui->Auto_Blower_POS5;
+    Auto_Blower_button[5] = ui->Auto_Blower_POS6;
+    Auto_Blower_button[6] = ui->Auto_Blower_POS7;
+    Auto_Blower_button[7] = ui->Auto_Blower_POS8;
+    Auto_Blower_button[8] = ui->Auto_Blower_POS9;
+
+    // 初始化x轴振动控件数组
+    Auto_Vibration_x[0] = ui->Auto_Vibration_POS1_X;
+    Auto_Vibration_x[1] = ui->Auto_Vibration_POS2_X;
+    Auto_Vibration_x[2] = ui->Auto_Vibration_POS3_X;
+    Auto_Vibration_x[3] = ui->Auto_Vibration_POS4_X;
+    Auto_Vibration_x[4] = ui->Auto_Vibration_POS5_X;
+    Auto_Vibration_x[5] = ui->Auto_Vibration_POS6_X;
+    Auto_Vibration_x[6] = ui->Auto_Vibration_POS7_X;
+    Auto_Vibration_x[7] = ui->Auto_Vibration_POS8_X;
+    Auto_Vibration_x[8] = ui->Auto_Vibration_POS9_X;
+
+    // 初始化y轴振动控件数组
+    Auto_Vibration_y[0] = ui->Auto_Vibration_POS1_Y;
+    Auto_Vibration_y[1] = ui->Auto_Vibration_POS2_Y;
+    Auto_Vibration_y[2] = ui->Auto_Vibration_POS3_Y;
+    Auto_Vibration_y[3] = ui->Auto_Vibration_POS4_Y;
+    Auto_Vibration_y[4] = ui->Auto_Vibration_POS5_Y;
+    Auto_Vibration_y[5] = ui->Auto_Vibration_POS6_Y;
+    Auto_Vibration_y[6] = ui->Auto_Vibration_POS7_Y;
+    Auto_Vibration_y[7] = ui->Auto_Vibration_POS8_Y;
+    Auto_Vibration_y[8] = ui->Auto_Vibration_POS9_Y;
+
+    // 初始化z轴振动控件数组
+    Auto_Vibration_z[0] = ui->Auto_Vibration_POS1_Z;
+    Auto_Vibration_z[1] = ui->Auto_Vibration_POS2_Z;
+    Auto_Vibration_z[2] = ui->Auto_Vibration_POS3_Z;
+    Auto_Vibration_z[3] = ui->Auto_Vibration_POS4_Z;
+    Auto_Vibration_z[4] = ui->Auto_Vibration_POS5_Z;
+    Auto_Vibration_z[5] = ui->Auto_Vibration_POS6_Z;
+    Auto_Vibration_z[6] = ui->Auto_Vibration_POS7_Z;
+    Auto_Vibration_z[7] = ui->Auto_Vibration_POS8_Z;
+    Auto_Vibration_z[8] = ui->Auto_Vibration_POS9_Z;
+
+    // 初始化噪音值控件数组
+    Auto_Noises_Value[0] = ui->Auto_Noises_Value_POS1;
+    Auto_Noises_Value[1] = ui->Auto_Noises_Value_POS2;
+    Auto_Noises_Value[2] = ui->Auto_Noises_Value_POS3;
+    Auto_Noises_Value[3] = ui->Auto_Noises_Value_POS4;
+    Auto_Noises_Value[4] = ui->Auto_Noises_Value_POS5;
+    Auto_Noises_Value[5] = ui->Auto_Noises_Value_POS6;
+    Auto_Noises_Value[6] = ui->Auto_Noises_Value_POS7;
+    Auto_Noises_Value[7] = ui->Auto_Noises_Value_POS8;
+    Auto_Noises_Value[8] = ui->Auto_Noises_Value_POS9;
+
+    // 初始化风速显示颜色按钮数组
+    Auto_Speed_button[0] = ui->Auto_Speed1;
+    Auto_Speed_button[1] = ui->Auto_Speed2;
+    Auto_Speed_button[2] = ui->Auto_Speed3;
+    Auto_Speed_button[3] = ui->Auto_Speed4;
+    Auto_Speed_button[4] = ui->Auto_Speed5;
+    Auto_Speed_button[5] = ui->Auto_Speed6;
+    Auto_Speed_button[6] = ui->Auto_Speed7;
+    Auto_Speed_button[7] = ui->Auto_Speed8;
+
+    // 初始化鼓风机传值1控件数组
+    Auto_Blower_Value[0] = ui->Auto_Blower_POS1_Value;
+    Auto_Blower_Value[1] = ui->Auto_Blower_POS2_Value;
+    Auto_Blower_Value[2] = ui->Auto_Blower_POS3_Value;
+    Auto_Blower_Value[3] = ui->Auto_Blower_POS4_Value;
+    Auto_Blower_Value[4] = ui->Auto_Blower_POS5_Value;
+    Auto_Blower_Value[5] = ui->Auto_Blower_POS6_Value;
+    Auto_Blower_Value[6] = ui->Auto_Blower_POS7_Value;
+    Auto_Blower_Value[7] = ui->Auto_Blower_POS8_Value;
+    Auto_Blower_Value[8] = ui->Auto_Blower_POS9_Value;
+
+    // 初始化鼓风机传值2控件数组
+    Auto_Blower_set_Value[0] = ui->Auto_Blower_POS1_Value_2;
+    Auto_Blower_set_Value[1] = ui->Auto_Blower_POS2_Value_2;
+    Auto_Blower_set_Value[2] = ui->Auto_Blower_POS3_Value_2;
+    Auto_Blower_set_Value[3] = ui->Auto_Blower_POS4_Value_2;
+    Auto_Blower_set_Value[4] = ui->Auto_Blower_POS5_Value_2;
+    Auto_Blower_set_Value[5] = ui->Auto_Blower_POS6_Value_2;
+    Auto_Blower_set_Value[6] = ui->Auto_Blower_POS7_Value_2;
+    Auto_Blower_set_Value[7] = ui->Auto_Blower_POS8_Value_2;
+    Auto_Blower_set_Value[8] = ui->Auto_Blower_POS9_Value_2;
+
+    // 初始化风速值控件数组
+    Auto_Speed_Value[0] = ui->Auto_Speed1_Value;
+    Auto_Speed_Value[1] = ui->Auto_Speed2_Value;
+    Auto_Speed_Value[2] = ui->Auto_Speed3_Value;
+    Auto_Speed_Value[3] = ui->Auto_Speed4_Value;
+    Auto_Speed_Value[4] = ui->Auto_Speed5_Value;
+    Auto_Speed_Value[5] = ui->Auto_Speed6_Value;
+    Auto_Speed_Value[6] = ui->Auto_Speed7_Value;
+    Auto_Speed_Value[7] = ui->Auto_Speed8_Value;
+
+    // 初始化风速模式值二维数组
+    // 第1行（Speed1的8种模式）
+    Auto_Speed_Mode_Value[0][0] = ui->Auto_Speed1_Mode1_Value;
+    Auto_Speed_Mode_Value[0][1] = ui->Auto_Speed1_Mode2_Value;
+    Auto_Speed_Mode_Value[0][2] = ui->Auto_Speed1_Mode3_Value;
+    Auto_Speed_Mode_Value[0][3] = ui->Auto_Speed1_Mode4_Value;
+    Auto_Speed_Mode_Value[0][4] = ui->Auto_Speed1_Mode5_Value;
+    Auto_Speed_Mode_Value[0][5] = ui->Auto_Speed1_Mode6_Value;
+    Auto_Speed_Mode_Value[0][6] = ui->Auto_Speed1_Mode7_Value;
+    Auto_Speed_Mode_Value[0][7] = ui->Auto_Speed1_Mode8_Value;
+
+    // 第2行（Speed2的8种模式）
+    Auto_Speed_Mode_Value[1][0] = ui->Auto_Speed2_Mode1_Value;
+    Auto_Speed_Mode_Value[1][1] = ui->Auto_Speed2_Mode2_Value;
+    Auto_Speed_Mode_Value[1][2] = ui->Auto_Speed2_Mode3_Value;
+    Auto_Speed_Mode_Value[1][3] = ui->Auto_Speed2_Mode4_Value;
+    Auto_Speed_Mode_Value[1][4] = ui->Auto_Speed2_Mode5_Value;
+    Auto_Speed_Mode_Value[1][5] = ui->Auto_Speed2_Mode6_Value;
+    Auto_Speed_Mode_Value[1][6] = ui->Auto_Speed2_Mode7_Value;
+    Auto_Speed_Mode_Value[1][7] = ui->Auto_Speed2_Mode8_Value;
+
+    // 第3行（Speed3的8种模式）
+    Auto_Speed_Mode_Value[2][0] = ui->Auto_Speed3_Mode1_Value;
+    Auto_Speed_Mode_Value[2][1] = ui->Auto_Speed3_Mode2_Value;
+    Auto_Speed_Mode_Value[2][2] = ui->Auto_Speed3_Mode3_Value;
+    Auto_Speed_Mode_Value[2][3] = ui->Auto_Speed3_Mode4_Value;
+    Auto_Speed_Mode_Value[2][4] = ui->Auto_Speed3_Mode5_Value;
+    Auto_Speed_Mode_Value[2][5] = ui->Auto_Speed3_Mode6_Value;
+    Auto_Speed_Mode_Value[2][6] = ui->Auto_Speed3_Mode7_Value;
+    Auto_Speed_Mode_Value[2][7] = ui->Auto_Speed3_Mode8_Value;
+
+    // 第4行（Speed4的8种模式）
+    Auto_Speed_Mode_Value[3][0] = ui->Auto_Speed4_Mode1_Value;
+    Auto_Speed_Mode_Value[3][1] = ui->Auto_Speed4_Mode2_Value;
+    Auto_Speed_Mode_Value[3][2] = ui->Auto_Speed4_Mode3_Value;
+    Auto_Speed_Mode_Value[3][3] = ui->Auto_Speed4_Mode4_Value;
+    Auto_Speed_Mode_Value[3][4] = ui->Auto_Speed4_Mode5_Value;
+    Auto_Speed_Mode_Value[3][5] = ui->Auto_Speed4_Mode6_Value;
+    Auto_Speed_Mode_Value[3][6] = ui->Auto_Speed4_Mode7_Value;
+    Auto_Speed_Mode_Value[3][7] = ui->Auto_Speed4_Mode8_Value;
+
+    // 第5行（Speed5的8种模式）
+    Auto_Speed_Mode_Value[4][0] = ui->Auto_Speed5_Mode1_Value;
+    Auto_Speed_Mode_Value[4][1] = ui->Auto_Speed5_Mode2_Value;
+    Auto_Speed_Mode_Value[4][2] = ui->Auto_Speed5_Mode3_Value;
+    Auto_Speed_Mode_Value[4][3] = ui->Auto_Speed5_Mode4_Value;
+    Auto_Speed_Mode_Value[4][4] = ui->Auto_Speed5_Mode5_Value;
+    Auto_Speed_Mode_Value[4][5] = ui->Auto_Speed5_Mode6_Value;
+    Auto_Speed_Mode_Value[4][6] = ui->Auto_Speed5_Mode7_Value;
+    Auto_Speed_Mode_Value[4][7] = ui->Auto_Speed5_Mode8_Value;
+
+    // 第6行（Speed6的8种模式）
+    Auto_Speed_Mode_Value[5][0] = ui->Auto_Speed6_Mode1_Value;
+    Auto_Speed_Mode_Value[5][1] = ui->Auto_Speed6_Mode2_Value;
+    Auto_Speed_Mode_Value[5][2] = ui->Auto_Speed6_Mode3_Value;
+    Auto_Speed_Mode_Value[5][3] = ui->Auto_Speed6_Mode4_Value;
+    Auto_Speed_Mode_Value[5][4] = ui->Auto_Speed6_Mode5_Value;
+    Auto_Speed_Mode_Value[5][5] = ui->Auto_Speed6_Mode6_Value;
+    Auto_Speed_Mode_Value[5][6] = ui->Auto_Speed6_Mode7_Value;
+    Auto_Speed_Mode_Value[5][7] = ui->Auto_Speed6_Mode8_Value;
+
+    // 第7行（Speed7的8种模式）
+    Auto_Speed_Mode_Value[6][0] = ui->Auto_Speed7_Mode1_Value;
+    Auto_Speed_Mode_Value[6][1] = ui->Auto_Speed7_Mode2_Value;
+    Auto_Speed_Mode_Value[6][2] = ui->Auto_Speed7_Mode3_Value;
+    Auto_Speed_Mode_Value[6][3] = ui->Auto_Speed7_Mode4_Value;
+    Auto_Speed_Mode_Value[6][4] = ui->Auto_Speed7_Mode5_Value;
+    Auto_Speed_Mode_Value[6][5] = ui->Auto_Speed7_Mode6_Value;
+    Auto_Speed_Mode_Value[6][6] = ui->Auto_Speed7_Mode7_Value;
+    Auto_Speed_Mode_Value[6][7] = ui->Auto_Speed7_Mode8_Value;
+
+    // 第8行（Speed8的8种模式）
+    Auto_Speed_Mode_Value[7][0] = ui->Auto_Speed8_Mode1_Value;
+    Auto_Speed_Mode_Value[7][1] = ui->Auto_Speed8_Mode2_Value;
+    Auto_Speed_Mode_Value[7][2] = ui->Auto_Speed8_Mode3_Value;
+    Auto_Speed_Mode_Value[7][3] = ui->Auto_Speed8_Mode4_Value;
+    Auto_Speed_Mode_Value[7][4] = ui->Auto_Speed8_Mode5_Value;
+    Auto_Speed_Mode_Value[7][5] = ui->Auto_Speed8_Mode6_Value;
+    Auto_Speed_Mode_Value[7][6] = ui->Auto_Speed8_Mode7_Value;
+    Auto_Speed_Mode_Value[7][7] = ui->Auto_Speed8_Mode8_Value;
+
+    // 初始化12路温度控件数组（Auto_Tem1~Auto_Tem12_Value）
+    Auto_Tem_Value[0] = ui->Auto_Tem1_Now;
+    Auto_Tem_Value[1] = ui->Auto_Tem2_Now;
+    Auto_Tem_Value[2] = ui->Auto_Tem3_Now;
+    Auto_Tem_Value[3] = ui->Auto_Tem4_Now;
+    Auto_Tem_Value[4] = ui->Auto_Tem5_Now;
+    Auto_Tem_Value[5] = ui->Auto_Tem6_Now;
+    Auto_Tem_Value[6] = ui->Auto_Tem7_Now;
+    Auto_Tem_Value[7] = ui->Auto_Tem8_Now;
+    Auto_Tem_Value[8] = ui->Auto_Tem9_Now;
+    Auto_Tem_Value[9] = ui->Auto_Tem10_Now;
+    Auto_Tem_Value[10] = ui->Auto_Tem11_Now;
+    Auto_Tem_Value[11] = ui->Auto_Tem12_Now;
+    Auto_Tem_Value[12] = ui->Auto_NowTem;
+    //初始化温度状态
+    Auto_Tem_Status[0]  = ui->Auto_Tem1;
+    Auto_Tem_Status[1]  = ui->Auto_Tem2;
+    Auto_Tem_Status[2]  = ui->Auto_Tem3;
+    Auto_Tem_Status[3]  = ui->Auto_Tem4;
+    Auto_Tem_Status[4]  = ui->Auto_Tem5;
+    Auto_Tem_Status[5]  = ui->Auto_Tem6;
+    Auto_Tem_Status[6]  = ui->Auto_Tem7;
+    Auto_Tem_Status[7]  = ui->Auto_Tem8;
+    Auto_Tem_Status[8]  = ui->Auto_Tem9;
+    Auto_Tem_Status[9]  = ui->Auto_Tem10;
+    Auto_Tem_Status[10] = ui->Auto_Tem11;
+    Auto_Tem_Status[11] = ui->Auto_Tem12;
+    Auto_Tem_Status[12] = ui->Auto_Tem13;
+
 }
 
 /*
@@ -6849,12 +7442,21 @@ void MainWindow::on_Btn_test2_clicked()
 void MainWindow::Slot_ShowUI_Data()
 {
     //PT电机
-    bool motor_pt_show_flag = true;
-    if(motor_pt_show_flag){
+    //    bool motor_pt_show_flag = true;
+    //    if(motor_pt_show_flag){
 
+    //    }
+    if(check_time_flag){
+
+
+        check_time++;
+        ui->Auto_CheckTime->setValue(QString::number(check_time/10.0,'f',1).toFloat());//检测时间
     }
 
+    for(int i = 1 ;i <= 8;i++){
 
+        showFuncUIData(i);
+    }
 
     //LIN电机
 
@@ -6885,33 +7487,226 @@ void MainWindow::Slot_ShowUI_Data()
 */
 void MainWindow::showFuncUIData(uchar _num){
     switch (_num) {
-        case FUNC_PT_ID:
+    case FUNC_PT_ID:{
 
-            break;
-        case FUNC_LIN_ID:
+        //读取PT
+        QList<PTMotorFP_Status_basis> Now_data = Nthread_ptmotor->reLinRealTimeData();
 
-            break;
-        case FUNC_BLO_ID:
+        for(int i = 0 ;i < 12;i++){
 
-            break;
-        case FUNC_THE_ID:
+            for(int j = 0 ;j < 8;j++){
+                m_FormMotor[i]->slot_PTSendMotorStatus("1",1,1,Now_data[i].Current_V,Now_data[i].Current_A, j + 1, Now_data[i].POSStatus[j],Now_data[i].POS_V[j],Now_data[i].POS_A[j],Now_data[i].m_type[j]);
+            }
 
-            break;
-        case FUNC_ANION_ID:
+            //Now_data[i].m_TotalResult 0:  1:OK  2: NG
+            //Now_data[i].m_TotalStatus  0: 停止 1：运行
+            m_FormMotor[i]->slot_setled(true, 0, Now_data[i].m_TotalResult,Now_data[i].m_TotalStatus);
 
-            break;
-        case FUNC_AQS_ID:
+        }
 
-            break;
-        case RUNC_PM25_ID:
+        break;}
+    case FUNC_LIN_ID:{
+        LINMotor_Return linreturn;
+        QList<LINMotor_Return> LinNowData;//读取电机实时数据
+        for(int x = 0;x < LINMotor_Count; x++)
+            LinNowData.insert(x, linreturn);
 
-            break;
-        case RUNC_PTC_ID:
+        LinNowData = Nthread_linmotor->reLinRealTimeData();
 
-            break;
-        default:
+        for(int i = 0 ;i < 12;i++){
 
-            break;
+            for(int j = 0 ;j < 8;j++){
+                m_FormLinMotor[i]->slot_SendMotorStatus("1",1,1,LinNowData[i].CurrentStep,0, j + 1 ,LinNowData[i].m_ProcessStatus[j],LinNowData[i].m_ProcessStep[j],0);//0:未运行 1：运行 2:OK 3:NG
+            }
+            m_FormLinMotor[i]->slot_setled(true, 0, LinNowData[i].m_TotalResult, LinNowData[i].m_TotalStatus);//0:停止 1：运行
+        }
+        LinNowData.clear();
+        break;
     }
+
+    case FUNC_BLO_ID:{
+
+
+        MS_DisplayDatas msDisplayDatas;
+        msDisplayDatas = m_Blower->reLinRealTimeData();
+        for(int i = 0 ;i < msDisplayDatas.v_PosResult_Blower.size();i++){
+
+            Auto_Blower_button[i]->setText(QString::number(msDisplayDatas.v_PosSteps_Blower.at(i)) + "档");//档位显示
+            ui->led_BlowerError->setText(msDisplayDatas.errorCode_fun30);
+            ui->Auto_Blower_Now_A_2->setValue(msDisplayDatas.v_BlowerRealCurr_YJ);
+            ui->Auto_Blower->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_allPosResult_blower));
+            Auto_Blower_button[i]->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_PosResult_Blower.at(i)));
+
+
+            ui->Auto_Vibration_X->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_allPosResult_VibrationX));
+            //                    Auto_Vibration_x[i]->setStyleSheet(setled_Vibration(msDisplayDatas.v_PosResult_VibrationX.at(i)));
+            Auto_Vibration_x[i]->setValue(QString::number(msDisplayDatas.v_Datas_VibrationX[i] /1.0,'f',3).toFloat());
+
+            ui->Auto_Vibration_Y->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_allPosResult_VibrationY));
+            //                    Auto_Vibration_y[i]->setStyleSheet(setled_Vibration(msDisplayDatas.v_PosResult_VibrationY.at(i)));
+            Auto_Vibration_y[i]->setValue(QString::number(msDisplayDatas.v_Datas_VibrationY[i] /1.0,'f',3).toFloat());
+
+            ui->Auto_Vibration_Z->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_allPosResult_VibrationZ));
+            //                    Auto_Vibration_z[i]->setStyleSheet(setled_Vibration(msDisplayDatas.v_PosResult_VibrationZ.at(i)));
+            Auto_Vibration_z[i]->setValue(QString::number(msDisplayDatas.v_Datas_VibrationZ[i] /1.0,'f',3).toFloat());
+
+            ui->Auto_Noises->setStyleSheet(Button_blower_background_color(msDisplayDatas.v_allPosResult_Noise));
+            //                    Auto_Noises_Value[i]->setStyleSheet(setled_Vibration(msDisplayDatas.v_PosResult_Noise.at(i)));
+            Auto_Noises_Value[i]->setValue(QString::number(msDisplayDatas.v_Datas_Noise[i] /1.0,'f',1).toFloat());
+
+            Auto_Blower_Value[i]->setValue(QString::number(msDisplayDatas.v_PosCurrs_Blower[i] /1.0, 'f',1).toFloat());
+            Auto_Blower_set_Value[i]->setValue(QString::number(msDisplayDatas.v_PosSpeed_Blower[i]).toUInt());
+
+            ui->doubleSpinBox_29->setValue(msDisplayDatas.v_BlowerRealVlot);
+            ui->Auto_Blower_Now_A->setValue(msDisplayDatas.v_BlowerRealCurr);
+            ui->Auto_Blower_Now_V->setValue(msDisplayDatas.v_BlowerRealSpeed);
+        }
+        break;
+    }
+    case FUNC_THE_ID:{
+        Thermistor_Status_basis thermistorreturn;
+        thermistorreturn = Nthread_Thermistor->reLinRealTimeData();
+
+        //       int borad_num = 0;
+        //       int i_num = 0;
+
+        for(int i = 0 ;i < 13;i++){
+
+            //            if((i%4 == 0) && i != 0)
+            //            {
+            //               borad_num++;
+            //               i_num = 0;
+            //            }
+            Auto_Tem_Status[i]->setStyleSheet(Button_blower_background_color(thermistorreturn.m_SingleStatus[i]));
+
+            Auto_Tem_Value[i]->setValue(QString::number(thermistorreturn.m_Temperature[i]/1.0,'f',1).toFloat());
+            //            i_num ++;
+        }
+        break;
+    }
+    case FUNC_ANION_ID:{
+        Anion_Status_basis anionstatusreturn;
+        anionstatusreturn = Nthread_Thermistor->reAnionRealTimeData();
+        break;
+    }
+    case FUNC_AQS_ID:{
+        break;
+    }
+    case RUNC_PM25_ID:{
+        break;
+    }
+    case RUNC_PTC_ID:{
+        break;
+    }
+    default:{
+
+        break;
+    }
+
+
+    }
+}
+/*
+* @description 分功能界面数据显示
+* @param {uchar} _num 功能ID
+* @returns {void} 无
+* @date 2025-10-28 14:03:00
+* @author zh
+*/
+void MainWindow::Slot_ShowUI_Results(uchar _num){
+    if(_num==0)//最终检测结果
+    {
+        ui->Auto_results->setText("");
+        ui->Auto_results->setStyleSheet("");
+    }
+    else if(_num==1)
+    {
+        check_time_Stop();
+        ui->Auto_results->setText("OK");
+        ui->Auto_results->setStyleSheet(Button_background_color(1));
+    }
+    else if(_num==2)
+    {
+        check_time_Stop();
+        ui->Auto_results->setText("NG");
+        ui->Auto_results->setStyleSheet(Button_background_color(3));
+    }
+    else if(_num==3)
+    {
+        ui->Auto_results->setText("RUN");
+        ui->Auto_results->setStyleSheet(Button_background_color(2));
+    }
+    else if(_num==4)
+    {
+        check_time_Stop();
+        ui->Auto_results->setText("STOP");
+        ui->Auto_results->setStyleSheet(Button_background_color(3));
+    }
+}
+/*
+* @description 分功能界面数据显示
+* @param {uchar} _num 功能ID
+* @returns {void} 无
+* @date 2025-10-28 14:03:00
+* @author zh
+*/
+void MainWindow::check_time_Start()
+{
+    check_time = 0;
+    check_time_flag = true;
+}
+/*
+* @description 分功能界面数据显示
+* @param {uchar} _num 功能ID
+* @returns {void} 无
+* @date 2025-10-28 14:03:00
+* @author zh
+*/
+void MainWindow::check_time_Stop()
+{
+    check_time_flag = false;
+}
+/*
+* @description 分功能界面数据显示
+* @param {uchar} _num 功能ID
+* @returns {void} 无
+* @date 2025-10-28 14:03:00
+* @author zh
+*/
+void MainWindow::Slot_ShowUI_Step(int _num){
+    ui->Auto_RunSteps->setText(QString::number(_num));//步骤
+}
+
+
+
+void MainWindow::on_Auto_PDbox_currentIndexChanged(int index)
+{
+
+}
+
+void MainWindow::on_actionModbus_triggered()
+{
+    m_Form_ModeBusRtu->show();
+}
+
+void MainWindow::on_actionstart_blower_triggered()
+{
+    m_Blower->slot_BlowerStop();
+}
+
+void MainWindow::on_actioncontinue_blower_triggered()
+{
+    m_Blower->slot_BlowerContinue();
+}
+
+void MainWindow::on_actionctr_relay_on_triggered()
+{
+    m_Blower->Send_RelayControl(1);
+}
+
+void MainWindow::on_actionctr_relay_off_triggered()
+{
+
+    m_Blower->Send_RelayControl(0);
 }
 

@@ -1,11 +1,15 @@
 #ifndef thread_CommTask_H
 #define thread_CommTask_H
 
-#include "Header_File.h"
+//#include "Header_File.h"
 #include <QObject>
 #include <QSemaphore>
 #include <QQueue>
 #include <QSerialPort>
+//#include "thread_main.h"
+//#include "thread_ptmotor.h"
+#include "mainwindow.h"
+
 
 //// 定义任务结果结构体，用于传递执行状态
 //struct TaskResult {
@@ -22,11 +26,13 @@ struct Task {
 //    int priority;  // 数值越小优先级越高
     bool isFixed;  // 是否为固定任务
 
+    bool *en;//固定任务使能
+
     int SendId;//站号
 
     int taskId;// 可以添加任务ID用于唯一标识
 
-    TaskResult* resultPtr /*= nullptr*/;  // 指向发送线程的结果存储地址
+    //TaskResult* resultPtr /*= nullptr*/;  // 指向发送线程的结果存储地址
     QString ComNum;  // 串口
 //    bool operator<(const Task& other) const {
 //        return priority < other.priority; // 数值越小，优先级越高
@@ -34,7 +40,9 @@ struct Task {
 };
 
 
-extern TaskResult resultgogo;
+//extern TaskResult resultgogo1;
+//extern TaskResult resultgogo2;
+//extern TaskResult resultgogo3;
 
 
 class thread_CommTask : public QThread
@@ -50,10 +58,10 @@ public:
 
     QElapsedTimer  R_Rfid_timer;
 
-    void addNormalTask(const QByteArray data,TaskResult* resultPtr);
-    void addNormalTask(QString PTName,const QByteArray data,TaskResult* resultPtr);
-    void addFixedTask(const QByteArray& data,TaskResult* resultPtr);
-    void addFixedTask(QString PTName,const QByteArray& data,TaskResult* resultPtr) ;
+    void addNormalTask(const QByteArray data);
+//    void addNormalTask(QString PTName,const QByteArray data);
+    void addFixedTask(const QByteArray& data,bool* _send_en);
+    void addFixedTask(QString PTName,const QByteArray& data,bool* _send_en) ;
     void clearFixedTask( );
     //QList<Task> m_taskQueue;  // 使用列表便于按优先级排序
     // 定义任务队列（成员变量）
@@ -75,6 +83,8 @@ public:
     int fixedError_Count = 0;//固定任务执行失败次数
     Task Error_tast;
     Task fixedError_tast;
+
+    int my_portIndex;
 
 public slots:
     void sendDataToSerial(int portIndex, const QByteArray &data);
@@ -105,6 +115,6 @@ private:
     QSemaphore m_semaphore;
 };
 
-extern thread_CommTask * Nthread_CommTask;
+extern thread_CommTask * Nthread_CommTask[3];
 
 #endif // thread_CommTask_H

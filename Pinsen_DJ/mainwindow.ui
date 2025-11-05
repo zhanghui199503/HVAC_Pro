@@ -582,7 +582,7 @@ QDoubleSpinBox::!enabled{
              <property name="font">
               <font>
                <family>微软雅黑</family>
-               <pointsize>64</pointsize>
+               <pointsize>45</pointsize>
               </font>
              </property>
              <property name="styleSheet">
@@ -682,19 +682,174 @@ QDoubleSpinBox::!enabled{
                 <property name="verticalSpacing">
                  <number>2</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_59">
+                <item row="1" column="7">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem7_Now">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
                     <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
                    </font>
                   </property>
-                  <property name="text">
-                   <string>温度传感器</string>
+                  <property name="styleSheet">
+                   <string notr="true">QDoubleSpinBox::enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>99.900000000000006</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="14">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem12_Now">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QDoubleSpinBox::enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>99.900000000000006</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="8">
+                 <widget class="QPushButton" name="Auto_Tem8">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>温敏电阻8</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem3_Now">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QDoubleSpinBox::enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>99.900000000000006</double>
                   </property>
                  </widget>
                 </item>
@@ -769,58 +924,8 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="9">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem9_Now">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QDoubleSpinBox::enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(0, 255, 255);
-}
-
-QDoubleSpinBox::!enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(170, 127, 127);
-}</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>99.900000000000006</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="9">
-                 <widget class="QPushButton" name="Auto_Tem9">
+                <item row="0" column="3">
+                 <widget class="QPushButton" name="Auto_Tem3">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -836,33 +941,12 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻9</string>
+                   <string>温敏电阻3</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="10">
-                 <widget class="QPushButton" name="Auto_Tem10">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>温敏电阻10</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem2_Now">
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem1_Now">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -961,166 +1045,35 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem1_Now">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_70">
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
                     <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <italic>false</italic>
-                    <bold>false</bold>
                    </font>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true">QDoubleSpinBox::enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(0, 255, 255);
-}
-
-QDoubleSpinBox::!enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(170, 127, 127);
-}</string>
+                  <property name="text">
+                   <string>当前温度(℃)</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
                   </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>99.900000000000006</double>
-                  </property>
                  </widget>
                 </item>
-                <item row="1" column="10">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem10_Now">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_59">
                   <property name="font">
                    <font>
                     <family>微软雅黑</family>
                     <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <italic>false</italic>
-                    <bold>false</bold>
                    </font>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true">QDoubleSpinBox::enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(0, 255, 255);
-}
-
-QDoubleSpinBox::!enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(170, 127, 127);
-}</string>
+                  <property name="text">
+                   <string>温度传感器</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>99.900000000000006</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QPushButton" name="Auto_Tem2">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>温敏电阻2</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="8">
-                 <widget class="QPushButton" name="Auto_Tem8">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>温敏电阻8</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="6">
-                 <widget class="QPushButton" name="Auto_Tem6">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>温敏电阻6</string>
                   </property>
                  </widget>
                 </item>
@@ -1145,108 +1098,8 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="7">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem7_Now">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QDoubleSpinBox::enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(0, 255, 255);
-}
-
-QDoubleSpinBox::!enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(170, 127, 127);
-}</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>99.900000000000006</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="8">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem8_Now">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <italic>false</italic>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">QDoubleSpinBox::enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(0, 255, 255);
-}
-
-QDoubleSpinBox::!enabled{
-	font: 8pt &quot;微软雅黑&quot;;
-	background-color: rgb(0, 0, 0);
-	color: rgb(170, 127, 127);
-}</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                  <property name="readOnly">
-                   <bool>true</bool>
-                  </property>
-                  <property name="buttonSymbols">
-                   <enum>QAbstractSpinBox::NoButtons</enum>
-                  </property>
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>99.900000000000006</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="13">
-                 <widget class="QPushButton" name="Auto_Tem1_2">
+                <item row="0" column="9">
+                 <widget class="QPushButton" name="Auto_Tem9">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1262,7 +1115,7 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻11</string>
+                   <string>温敏电阻9</string>
                   </property>
                  </widget>
                 </item>
@@ -1316,8 +1169,8 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="5">
-                 <widget class="QPushButton" name="Auto_Tem5">
+                <item row="0" column="6">
+                 <widget class="QPushButton" name="Auto_Tem6">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1333,12 +1186,12 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻5</string>
+                   <string>温敏电阻6</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="14">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem2_Now_2">
+                <item row="1" column="8">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem8_Now">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -1387,8 +1240,192 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="3">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem3_Now">
+                <item row="0" column="7">
+                 <widget class="QPushButton" name="Auto_Tem7">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>温敏电阻7</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="15">
+                 <widget class="QDoubleSpinBox" name="Auto_NowTem">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QDoubleSpinBox::enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>99.900000000000006</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem2_Now">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QDoubleSpinBox::enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 8pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                  <property name="readOnly">
+                   <bool>true</bool>
+                  </property>
+                  <property name="buttonSymbols">
+                   <enum>QAbstractSpinBox::NoButtons</enum>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="maximum">
+                   <double>99.900000000000006</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="15">
+                 <widget class="QPushButton" name="Auto_Tem13">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>当前环境温度</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="13">
+                 <widget class="QPushButton" name="Auto_Tem11">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>温敏电阻11</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="14">
+                 <widget class="QPushButton" name="Auto_Tem12">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>微软雅黑</family>
+                    <pointsize>8</pointsize>
+                    <weight>50</weight>
+                    <bold>false</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>温敏电阻12</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="9">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem9_Now">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -1438,7 +1475,7 @@ QDoubleSpinBox::!enabled{
                  </widget>
                 </item>
                 <item row="1" column="13">
-                 <widget class="QDoubleSpinBox" name="Auto_Tem1_Now_2">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem11_Now">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -1487,8 +1524,8 @@ QDoubleSpinBox::!enabled{
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="3">
-                 <widget class="QPushButton" name="Auto_Tem3">
+                <item row="0" column="5">
+                 <widget class="QPushButton" name="Auto_Tem5">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1504,28 +1541,12 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻3</string>
+                   <string>温敏电阻5</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_70">
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>当前温度(℃)</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="7">
-                 <widget class="QPushButton" name="Auto_Tem7">
+                <item row="0" column="10">
+                 <widget class="QPushButton" name="Auto_Tem10">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1541,12 +1562,12 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻7</string>
+                   <string>温敏电阻10</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="14">
-                 <widget class="QPushButton" name="Auto_Tem2_2">
+                <item row="0" column="2">
+                 <widget class="QPushButton" name="Auto_Tem2">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1562,30 +1583,12 @@ QDoubleSpinBox::!enabled{
                    </font>
                   </property>
                   <property name="text">
-                   <string>温敏电阻12</string>
+                   <string>温敏电阻2</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="15">
-                 <widget class="QLabel" name="label_55">
-                  <property name="font">
-                   <font>
-                    <family>微软雅黑</family>
-                    <pointsize>8</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::Box</enum>
-                  </property>
-                  <property name="text">
-                   <string>当前环境温度</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="15">
-                 <widget class="QDoubleSpinBox" name="Auto_NowTem">
+                <item row="1" column="10">
+                 <widget class="QDoubleSpinBox" name="Auto_Tem10_Now">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -1896,7 +1899,7 @@ QPushButton:hover {
     }</string>
                 </property>
                 <property name="text">
-                 <string>强制放行</string>
+                 <string>停止</string>
                 </property>
                 <property name="autoRepeat">
                  <bool>false</bool>
@@ -2013,90 +2016,7 @@ QPushButton:hover {
                    <property name="verticalSpacing">
                     <number>2</number>
                    </property>
-                   <item row="0" column="3">
-                    <widget class="QLabel" name="label_45">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>微软雅黑</family>
-                       <pointsize>10</pointsize>
-                       <weight>50</weight>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>实时电流:</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="label_48">
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>微软雅黑</family>
-                       <pointsize>10</pointsize>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>实时电压:</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QPushButton" name="Auto_Blower">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>100</width>
-                       <height>25</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>16777215</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>微软雅黑</family>
-                       <pointsize>8</pointsize>
-                       <weight>50</weight>
-                       <italic>false</italic>
-                       <bold>false</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true"/>
-                     </property>
-                     <property name="text">
-                      <string>鼓风机</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="7">
+                   <item row="0" column="9">
                     <widget class="QDoubleSpinBox" name="Auto_Blower_Now_V">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -2140,6 +2060,96 @@ QDoubleSpinBox::!enabled{
                      </property>
                      <property name="maximum">
                       <double>10000.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="6">
+                    <widget class="QDoubleSpinBox" name="Auto_Blower_Now_A_2">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>65</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>9</pointsize>
+                       <weight>50</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QDoubleSpinBox::enabled{
+	font: 9pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(0, 255, 255);
+}
+
+QDoubleSpinBox::!enabled{
+	font: 9pt &quot;微软雅黑&quot;;
+	background-color: rgb(0, 0, 0);
+	color: rgb(170, 127, 127);
+}</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                     <property name="buttonSymbols">
+                      <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="value">
+                      <double>0.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QPushButton" name="Auto_Blower">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>8</pointsize>
+                       <weight>50</weight>
+                       <italic>false</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true"/>
+                     </property>
+                     <property name="text">
+                      <string>鼓风机</string>
                      </property>
                     </widget>
                    </item>
@@ -2196,14 +2206,8 @@ QDoubleSpinBox::!enabled{
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="5">
-                    <widget class="QLabel" name="label_44">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
+                   <item row="0" column="3">
+                    <widget class="QLabel" name="label_45">
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
@@ -2219,7 +2223,29 @@ QDoubleSpinBox::!enabled{
                       </font>
                      </property>
                      <property name="text">
-                      <string>实时占空比/转速:</string>
+                      <string>实时电流:</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_48">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>10</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>实时电压:</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2258,6 +2284,82 @@ QDoubleSpinBox::!enabled{
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="5">
+                    <widget class="QLabel" name="label_46">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>硬件电流：</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="7">
+                    <widget class="QLabel" name="label_44">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>10</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>实时占空比/转速:</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0" colspan="3">
+                    <widget class="QLabel" name="led_BlowerError">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>25</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>微软雅黑</family>
+                       <pointsize>10</pointsize>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </item>
@@ -2379,6 +2481,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="3" column="6">
@@ -2491,6 +2596,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -2605,6 +2713,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="6" column="3">
@@ -2656,6 +2767,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -2815,6 +2929,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="6" column="1">
@@ -2866,6 +2983,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -2946,6 +3066,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="5" column="8">
@@ -2998,6 +3121,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="6" column="5">
@@ -3049,6 +3175,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -3275,6 +3404,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -3730,6 +3862,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="3" column="8">
@@ -3843,6 +3978,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="6">
@@ -3894,6 +4032,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -4004,6 +4145,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -4134,6 +4278,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="2" column="6">
@@ -4243,6 +4390,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -4552,6 +4702,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="4">
@@ -4603,6 +4756,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -4884,6 +5040,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="5" column="2">
@@ -4935,6 +5094,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -5003,6 +5165,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -5116,6 +5281,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -5332,6 +5500,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="4" column="3">
@@ -5384,6 +5555,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="6" column="2">
@@ -5435,6 +5609,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -5620,6 +5797,9 @@ QToolTip {
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
                      </property>
+                     <property name="decimals">
+                      <number>3</number>
+                     </property>
                     </widget>
                    </item>
                    <item row="6" column="10">
@@ -5671,6 +5851,9 @@ QToolTip {
                      </property>
                      <property name="buttonSymbols">
                       <enum>QAbstractSpinBox::NoButtons</enum>
+                     </property>
+                     <property name="decimals">
+                      <number>3</number>
                      </property>
                     </widget>
                    </item>
@@ -11510,6 +11693,7 @@ QLineEdit::!enabled{
     </property>
     <addaction name="actionPLC"/>
     <addaction name="actionRfid"/>
+    <addaction name="actionModbus"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -11526,6 +11710,10 @@ QLineEdit::!enabled{
     <addaction name="actionAbout_Software"/>
     <addaction name="actionContact_Us"/>
     <addaction name="actiontest"/>
+    <addaction name="actionstart_blower"/>
+    <addaction name="actioncontinue_blower"/>
+    <addaction name="actionctr_relay_on"/>
+    <addaction name="actionctr_relay_off"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -11631,6 +11819,31 @@ QLineEdit::!enabled{
    </property>
    <property name="toolTip">
     <string>调试界面</string>
+   </property>
+  </action>
+  <action name="actionModbus">
+   <property name="text">
+    <string>Modbus</string>
+   </property>
+  </action>
+  <action name="actionstart_blower">
+   <property name="text">
+    <string>stop blower</string>
+   </property>
+  </action>
+  <action name="actioncontinue_blower">
+   <property name="text">
+    <string>continue blower</string>
+   </property>
+  </action>
+  <action name="actionctr_relay_on">
+   <property name="text">
+    <string>ctr relay on</string>
+   </property>
+  </action>
+  <action name="actionctr_relay_off">
+   <property name="text">
+    <string>ctr relay off</string>
    </property>
   </action>
  </widget>

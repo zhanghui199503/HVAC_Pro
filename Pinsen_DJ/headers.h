@@ -1,5 +1,6 @@
-#ifndef HEADER_FILE_H
-#define HEADER_FILE_H
+
+
+
 
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -15,21 +16,33 @@
 #include <QSqlError>
 #include <QSqlTableModel>
 
+#ifndef HEADS_H
+#define HEADS_H
+
 // 定义任务结果结构体，用于传递执行状态
-struct TaskResult {
-    bool completed;  // 任务是否完成
-    QByteArray result;  // 任务执行结果
-    bool success;    // 任务是否成功执行
+//struct TaskResult {
+//    bool completed;  // 任务是否完成
+//    QByteArray result;  // 任务执行结果
+//    bool success;    // 任务是否成功执行
 
-    TaskResult() : completed(false), success(false) {}
-};
+//    TaskResult() : completed(false), success(false) {}
+//};
+#endif // HEADS_H
 
-#include "systemdataset.h"
+#include <QThread>
+#include <QMap>
+
 
 
 //主界面
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include "serialportworker.h"
+
+#include "thread_ptmotor.h"
+#include "motor_types.h"
+#include "MFormMotor.h"
 
 //PLC通讯界面
 #include "plc_mc.h"
@@ -53,7 +66,6 @@ struct TaskResult {
 ////LIN电机设置界面
 //#include "lin_dataset.h"
 //#include "ui_lin_dataset.h"
-
 
 //联系我们界面
 #include "showpicture.h"
@@ -96,16 +108,9 @@ struct TaskResult {
 #include "communicationerror.h"
 #include "ui_communicationerror.h"
 
-//#include "thread_CommTask.h"
+#include "thread_CommTask.h"
 #include "thread_main.h"
 
-//中盛
-#include "ModbusRtu/MForm_ModeBusRtu.h"
 
-//鼓风机
-#include "MBlower.h"
 
-//温敏
-#include "thread_thermistor.h"
 
-#endif // HEADER_FILE_H

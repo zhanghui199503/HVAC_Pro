@@ -10,11 +10,8 @@
 #include <QTimer>
 #include <QThread>
 #include <QDebug>
-#include <QTextBrowser>
-#include <QObject>
 #include <QMutex>
-
-#include <QScrollBar>
+#include <QTextBrowser>
 
 namespace Ui {
 class FormLogShow;
@@ -30,7 +27,10 @@ public:
 
     static FormLogShow* getInstance();
 
+
     void applyFilters();
+
+
 
 private slots:
     void on_applyFilterButton_clicked();
@@ -47,13 +47,9 @@ public slots:
     void addLog(const QString &level, const QString &content);
 
 private:
-    static QMutex m_instanceMutex;      // 单例创建的互斥锁
-
-    bool m_autoScroll = true;       // 自动滚动标志
-    QTimer *m_scrollTimer = nullptr; // 延迟滚动定时器
-    QMutex m_scrollMutex;           // 滚动操作互斥锁
-
     Ui::FormLogShow *ui;
+
+    static QMutex m_instanceMutex; // 关键：类外定义，分配内存
 
 
     struct LogEntry {

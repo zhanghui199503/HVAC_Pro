@@ -5,10 +5,16 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QMap>
+#include "thread_CommTask.h"
 #include "serialportworker.h"
 #include "thread_ptmotor.h"
 #include "motor_types.h"
 #include "MFormMotor.h"
+
+
+#include "thread_linmotor.h"
+#include "lin_headres.h"
+#include "thread_thermistor.h"
 
 #include "FormLogShow.h"
 
@@ -157,9 +163,6 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-
-
-
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -197,6 +200,7 @@ public:
     QMap<int, bool> m_serialOpened;
 
     bool Start_Process = false;
+    QString setled_Vibration(int result);
 public slots:
     void sendDataToSerial(int portIndex, const QByteArray &data);// 发送数据到指定串口
     void closeSerialPort(int portIndex);// 关闭指定串口
@@ -235,6 +239,17 @@ public slots:
 
 
     void Process_Initiation();
+
+
+
+    void check_time_Start();
+
+
+    void Start_reset_funtion();
+
+    void on_Auto_Start_clicked();
+    void on_MandatoryLetgo_clicked();
+    void check_time_reset();
 private slots:
     void on_actionPLC_triggered();//PLC通讯界面
     void UpdateTime();//更新主界面时间
@@ -251,7 +266,7 @@ private slots:
 
 
 
-    void on_Auto_Start_clicked();
+
 
     void on_Auto_Reset_clicked();
 
@@ -290,8 +305,28 @@ private slots:
     void Slot_ShowUI_Data();
     void showFuncUIData(uchar _num);
 
+    void Slot_ShowUI_Results(uchar _num);
+    void Slot_ShowUI_Step(int _num);
+    void check_time_Stop();
+
+    void on_Auto_PDbox_currentIndexChanged(int index);
+
+    void on_actionModbus_triggered();
+
+    void on_actionstart_blower_triggered();
+
+    void on_actioncontinue_blower_triggered();
+
+    void on_actionctr_relay_on_triggered();
+
+    void on_actionctr_relay_off_triggered();
+
+
+
 private:
 
+    MFormMotor *m_FormMotor[12];
+    MFormMotor *m_FormLinMotor[12];
 
     int m_nextPortIndex=0; // 下一个可用的端口索引
     // 创建串口连接
@@ -302,11 +337,31 @@ private:
 
     //------------PT电机线程-------------
     QThread *workerThread;
-    thread_ptmotor *PTworker;
+//    thread_ptmotor *PTworker;
 
+    QDoubleSpinBox *Auto_Vibration_x[9];
+    QDoubleSpinBox *Auto_Vibration_y[9];
+    QDoubleSpinBox *Auto_Vibration_z[9];
+    QDoubleSpinBox *Auto_Noises_Value[9];
+    QPushButton *Auto_Speed_button[8];
+    QDoubleSpinBox *Auto_Blower_Value[9];
+    QDoubleSpinBox *Auto_Blower_set_Value[9];
+    QDoubleSpinBox *Auto_Speed_Value[8];
+    QDoubleSpinBox *Auto_Speed_Mode_Value[8][8];
+    QDoubleSpinBox *Auto_Tem_Value[13];
+    QPushButton    *Auto_Tem_Status[13];
+    QPushButton *Auto_Blower_button[9];
+    void initUIControlArrays();
+
+    float check_time = 0;
+    bool check_time_flag = false;
+    //------------LIN电机线程-------------
+    QString Button_blower_background_color(int result);
 protected:
     void closeEvent(QCloseEvent *event);
 signals:
+
+    void sign_BlowerFixedPar(Blower_Setting_basis blowerFixPar, Blower_Setting_basis1 variablePars);
     void Sign_Start_detection(QString unit, int address,int value);//发送启动检测
     void Sign_Multiblock_detection(int BlockNum,QVector<QStringList> index);//发送多地址检测
     void Sign_Start_detectionPoint(QString unit, int address,int value);//发送检测点位
@@ -319,13 +374,17 @@ signals:
 extern int reszult ;//记录追溯结果
 extern MainWindow *MainShow;
 
-
 extern QList<PTMotorFP_Setting_basis> PTmotorSettingsList;
 extern QList<PTMotorFP_Setting_basis1> PTmotorSettingsList1;
 extern QList<LINMotorFP_Setting_basis> LINmotorSettingsList;
-extern QList<LINMotorFP_Setting_basis1> LINmotorSettingsList1;
-extern QList<Blower_Setting_basis> BlowerSettingsList;
-extern QList<Blower_Setting_basis1> BlowerSettingsList1;
-extern QList<Res_Setting_basis> ResSettingsList;
+extern QList<QList<LINMotorFP_Setting_basis1>> LINmotorSettingsList1;
+//extern QList<Blower_Setting_basis> BlowerSettingsList;
+//extern QList<Blower_Setting_basis1> BlowerSettingsList1;
+extern Blower_Setting_basis mBlowerSettingsList;
+extern Blower_Setting_basis1 mBlowerSettingsList1;
+
+extern QList<ToralThermistor_Setting_basis> ResSettingsList;
+extern QList<Thermistor_Setting_basis> ResSettingsList1;
+extern QList<QList<Thermistor_Setting_basis>> ResSettingsList2;
 
 #endif // MAINWINDOW_H

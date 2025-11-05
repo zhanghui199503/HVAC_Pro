@@ -1,4 +1,4 @@
-QT += core gui axcontainer printsupport serialport sql printsupport network
+QT += core gui axcontainer printsupport serialport serialbus sql printsupport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -8,6 +8,7 @@ INCLUDEPATH += $$PWD QXlsx
 CONFIG += resources_big
 CONFIG += c++11
 
+#DEFINES += QT_NO_DEBUG_OUTPUT
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -15,7 +16,10 @@ CONFIG += c++11
 
 SOURCES += \
     FormLogShow.cpp \
+    MBlower.cpp \
     MFormMotor.cpp \
+    ModbusRtu/MForm_ModeBusRtu.cpp \
+    ModbusRtu/mModbusRtu.cpp \
     RFID/mRFID_Dialog.cpp \
     aboutsoftware.cpp \
     communicationerror.cpp \
@@ -39,17 +43,25 @@ SOURCES += \
     systemdataset.cpp \
     thread_CommTask.cpp \
     thread_main.cpp \
-    thread_ptmotor.cpp
+    thread_ptmotor.cpp \
+    lin_headres.cpp \
+    thread_linmotor.cpp \
+    thread_thermistor.cpp
 
 HEADERS += \
     FormLogShow.h \
+    FormLogShow.h \
     Header_File.h \
+    MBlower.h \
     MFormMotor.h \
+    ModbusRtu/MForm_ModeBusRtu.h \
+    ModbusRtu/mModbusRtu.h \
     RFID/mRFID_Dialog.h \
     aboutsoftware.h \
     communicationerror.h \
     datasetting.h \
     editablelabel.h \
+    headers.h \
     home_interface.h \
     hvac_mode.h \
     ini_file.h \
@@ -68,11 +80,16 @@ HEADERS += \
     systemdataset.h \
     thread_CommTask.h \
     thread_main.h \
-    thread_ptmotor.h
+    thread_ptmotor.h \
+    lin_headres.h \
+    thread_linmotor.h \
+    thread_thermistor.h
 
 FORMS += \
     FormLogShow.ui \
+    FormLogShow.ui \
     MFormMotor.ui \
+    ModbusRtu/MForm_ModeBusRtu.ui \
     RFID/mRFID_Dialog.ui \
     aboutsoftware.ui \
     communicationerror.ui \

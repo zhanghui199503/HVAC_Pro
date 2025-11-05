@@ -62,37 +62,12 @@ FormLogShow::FormLogShow(QWidget *parent) :
     ui->endTimeEdit->setDisplayFormat("yyyy-MM-dd HH:mm:ss");
     ui->endTimeEdit->setDateTime(QDateTime::currentDateTime());
 
-    // 初始化滚动定时器
-        m_scrollTimer = new QTimer(this);
-        m_scrollTimer->setSingleShot(true);
-        m_scrollTimer->setInterval(100);  // 缩短延迟到100ms，提升响应速度
+    // 定时器用于检测当前活动的DateTimeEdit
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &FormLogShow::updateActiveDateTimeEdit);
+    //timer->start(100); // 每100ms检查一次
 
-        // 监控滚动条状态变化（使用valueChanged和sliderMoved双保险）
-        auto scrollBar = ui->plainTextEdit->verticalScrollBar();
-        connect(scrollBar, &QScrollBar::valueChanged, this, [this, scrollBar]() {
-            QMutexLocker locker(&m_scrollMutex);  // 加锁确保线程安全
-            // 当滚动条距离底部小于5行时，认为需要自动滚动
-            int maxVal = scrollBar->maximum();
-            int currentVal = scrollBar->value();
-            int pageStep = scrollBar->pageStep();
-            m_autoScroll = (currentVal >= maxVal - pageStep / 2);  // 更宽松的判断条件
-        });
-
-        // 捕捉用户手动拖动事件
-        connect(scrollBar, &QScrollBar::sliderMoved, this, [this]() {
-            QMutexLocker locker(&m_scrollMutex);
-            m_autoScroll = false;  // 手动拖动时强制关闭自动滚动
-        });
-
-        // 延迟滚动实现
-        connect(m_scrollTimer, &QTimer::timeout, this, [this]() {
-            QMutexLocker locker(&m_scrollMutex);
-            if (m_autoScroll && ui->plainTextEdit->document()->blockCount() > 0) {
-                // 使用blockCount判断是否有内容，避免空文档操作
-                ui->plainTextEdit->moveCursor(QTextCursor::End);
-                ui->plainTextEdit->ensureCursorVisible();
-            }
-        });
+    ui->plainTextEdit->setMaximumBlockCount(5000); // 自动限制最多1000行
 
 
 }
@@ -170,10 +145,7 @@ void FormLogShow::addLog(const QString &level, const QString &content) {
             if(entry.rawText.contains(ui->keywordLineEdit->text()))
             {
                 //ui->logTextBrowser->append(entry.htmlText);
-                //ui->plainTextEdit->appendHtml(entry.htmlText);
-                ui->plainTextEdit->setUpdatesEnabled(false);
                 ui->plainTextEdit->appendHtml(entry.htmlText);
-                ui->plainTextEdit->setUpdatesEnabled(true);
                 filteredLogs.append(entry);
                 qDebug()<<ui->keywordLineEdit->text()<<entry.rawText;
             }
@@ -184,10 +156,7 @@ void FormLogShow::addLog(const QString &level, const QString &content) {
 
 
             //ui->logTextBrowser->append(entry.htmlText);
-            //ui->plainTextEdit->appendHtml(entry.htmlText);
-            ui->plainTextEdit->setUpdatesEnabled(false);
             ui->plainTextEdit->appendHtml(entry.htmlText);
-            ui->plainTextEdit->setUpdatesEnabled(true);
             filteredLogs.append(entry);
             //qDebug()<<"wu2";
 
@@ -200,20 +169,14 @@ void FormLogShow::addLog(const QString &level, const QString &content) {
             if(entry.rawText.compare(ui->keywordLineEdit->text()))
             {
                 //ui->logTextBrowser->append(entry.htmlText);
-                //ui->plainTextEdit->appendHtml(entry.htmlText);
-                ui->plainTextEdit->setUpdatesEnabled(false);
                 ui->plainTextEdit->appendHtml(entry.htmlText);
-                ui->plainTextEdit->setUpdatesEnabled(true);
                 filteredLogs.append(entry);
             }
         }
         else
         {
             //ui->logTextBrowser->append(entry.htmlText);
-            //ui->plainTextEdit->appendHtml(entry.htmlText);
-            ui->plainTextEdit->setUpdatesEnabled(false);
             ui->plainTextEdit->appendHtml(entry.htmlText);
-            ui->plainTextEdit->setUpdatesEnabled(true);
             filteredLogs.append(entry);
         }
 
@@ -226,28 +189,15 @@ void FormLogShow::addLog(const QString &level, const QString &content) {
     }
 
     if (allLogs.size() > 2000) {
-//        QList<LogEntry> temp = allLogs.mid(1000, 2000); // 截取前100条
-//        allLogs.swap(temp); // 释放原有内存
-        allLogs = allLogs.mid(allLogs.size() - 1000);
+        QList<LogEntry> temp = allLogs.mid(1000, 2000); // 截取前100条
+        allLogs.swap(temp); // 释放原有内存
         //limitLogLines(ui->logTextBrowser, 2000);
 
         qDebug()<<"清理数据";
     }
 
-    //ui->plainTextEdit->update();  // 推荐，会触发paintEvent，效率高
-
-    //QApplication::processEvents();  // 处理所有积压的UI事件（关键）
-
-    //ui->plainTextEdit->moveCursor(QTextCursor::End);
-    //ui->plainTextEdit->ensureCursorVisible(); // 确保光标所在行可见
-
     // 自动滚动到底部
     //ui->logTextBrowser->moveCursor(QTextCursor::End);
-
-    QMutexLocker locker(&m_scrollMutex);  // 确保线程安全
-    if (m_autoScroll) {
-        m_scrollTimer->start();  // 触发延迟滚动
-    }
 }
 
 void FormLogShow::applyFilters() {
@@ -282,11 +232,7 @@ void FormLogShow::applyFilters() {
 
     // 自动滚动到底部
 //    ui->logTextBrowser->moveCursor(QTextCursor::End);
-    //ui->plainTextEdit->moveCursor(QTextCursor::End);
-    // 筛选后默认滚动到底部
-        QMutexLocker locker(&m_scrollMutex);
-        m_autoScroll = true;  // 筛选后重置自动滚动状态
-        ui->plainTextEdit->moveCursor(QTextCursor::End);
+    ui->plainTextEdit->moveCursor(QTextCursor::End);
 }
 
 // 清空日志

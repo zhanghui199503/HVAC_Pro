@@ -136,11 +136,11 @@ void DataSetting::functChanged()
 void DataSetting::Main_Init()//界面初始化
 {
     list_CBB<<ui->CBB_posBoard_1<<ui->CBB_posBoard_2<<ui->CBB_posBoard_3<<ui->CBB_posBoard_4
-        <<ui->CBB_posBoard_5<<ui->CBB_posBoard_6<<ui->CBB_posBoard_7<<ui->CBB_posBoard_8
-       <<ui->CBB_posBoard_9<<ui->CBB_posBoard_10<<ui->CBB_posBoard_11<<ui->CBB_posBoard_12
-      <<ui->CBB_posBoard_13<<ui->CBB_posBoard_14<<ui->CBB_posBoard_15<<ui->CBB_posBoard_16
-     <<ui->CBB_posBoard_17<<ui->CBB_posBoard_18<<ui->CBB_posBoard_19<<ui->CBB_posBoard_20
-    <<ui->CBB_posBoard_21<<ui->CBB_posBoard_22<<ui->CBB_posBoard_23<<ui->CBB_posBoard_24;
+           <<ui->CBB_posBoard_5<<ui->CBB_posBoard_6<<ui->CBB_posBoard_7<<ui->CBB_posBoard_8
+          <<ui->CBB_posBoard_9<<ui->CBB_posBoard_10<<ui->CBB_posBoard_11<<ui->CBB_posBoard_12
+         <<ui->CBB_posBoard_13<<ui->CBB_posBoard_14<<ui->CBB_posBoard_15<<ui->CBB_posBoard_16
+        <<ui->CBB_posBoard_17<<ui->CBB_posBoard_18<<ui->CBB_posBoard_19<<ui->CBB_posBoard_20
+       <<ui->CBB_posBoard_21<<ui->CBB_posBoard_22<<ui->CBB_posBoard_23<<ui->CBB_posBoard_24;
 
 
     LIN_container.append(ui->scrollArea);LIN_container.append(ui->scrollArea_2);LIN_container.append(ui->scrollArea_3);LIN_container.append(ui->scrollArea_4);
@@ -2246,8 +2246,8 @@ void DataSetting::SaveLimitData()
 //---------------------------------读取数据-------------------------------------
 void DataSetting::Read_inifile()
 {
+    Read_Write_Mode = 1;
     qDebug()<<QTime::currentTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-    qDebug()<<"执行到1";
     //----------------------------LIN_Motor ini-----------------------------
     QString Linpath = QApplication::applicationDirPath() + "/HVAC/HVAC_LIN_Data.ini";
     QSettings *LinINI_File = new QSettings(Linpath, QSettings::IniFormat);
@@ -2403,7 +2403,6 @@ void DataSetting::Read_inifile()
             }
         }
     }
-    qDebug()<<"执行到2";
     //----------------------------PT_Motor ini-----------------------------
     QString Ptpath = QApplication::applicationDirPath() + "/HVAC/HVAC_PT_Data.ini";
     QSettings *PtINI_File = new QSettings(Ptpath, QSettings::IniFormat);
@@ -2628,7 +2627,6 @@ void DataSetting::Read_inifile()
         }
     }
     PtINI_File->destroyed();
-    qDebug()<<"执行到3";
     //----------------------------鼓风机 ini-----------------------------
     QString Blowerpath = QApplication::applicationDirPath() + "/HVAC/HVAC_Blower_Data.ini";
     QSettings *BlowerINI_File = new QSettings(Blowerpath, QSettings::IniFormat);
@@ -3196,9 +3194,8 @@ void DataSetting::Read_inifile()
     ui->AQS_Hardware->setValue(BlowerINI_File->value(PD+"/AQS_Hardware").toDouble());
 
     //----------------------------电阻 风速 ini-----------------------------
-    qDebug()<<"执行到4";
     //--------------------------温敏--------------------------
-    QString ResSpeedpath = QApplication::applicationDirPath() + "/HVAC/HVAC_Blower_Data.ini";
+    QString ResSpeedpath = QApplication::applicationDirPath() + "/HVAC/HVAC_ResSpeed_Data.ini";
     QSettings *ResSpeedINI_File = new QSettings(ResSpeedpath, QSettings::IniFormat);
     ResSpeedINI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
 
@@ -3210,10 +3207,12 @@ void DataSetting::Read_inifile()
     if(!Res_EnableString.isEmpty())
     {
         QStringList Res_EnableList = Res_EnableString.split(',');
-        for (int i = 0; i < Res_EnableWidgets.count(); i++) {
-            if(Res_EnableWidgets[i]==1)
+        qDebug()<<"--------------------------------"<<Res_EnableString<<Res_EnableButtonWidgets.count();
+        for (int i = 0; i < Res_EnableButtonWidgets.count(); i++) {
+            if(Res_EnableList.at(i).toInt())
             {
                 //                Res_EnableButtonWidgets[i]->click();
+                 qDebug()<<"--------------------------------"<<Res_EnableString;
                 Res_EnableWidgets[i] = 1;
                 Res_EnableButtonWidgets[i]->setStyleSheet("background-color: rgb(0, 200, 0);");
             }
@@ -3389,7 +3388,6 @@ void DataSetting::Read_inifile()
 
 
     //----------------------------检测顺序 ini-----------------------------
-    qDebug()<<"执行到5";
     QString Equencepath = QApplication::applicationDirPath() + "/HVAC/HVAC_Equence_Data.ini";
     QSettings *EquenceINI_File = new QSettings(Equencepath, QSettings::IniFormat);
     EquenceINI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
@@ -3405,10 +3403,21 @@ void DataSetting::Read_inifile()
 
     //--------------------------串口设置界面--------------------
 
-//    QString PD = "PD"+ui->DataSeting_PD->currentText();
+    //    QString PD = "PD"+ui->DataSeting_PD->currentText();
     QString path = QApplication::applicationDirPath() + "/HVAC/SettingData.ini";
     QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
     INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
+
+
+    ui->Serial_Number->setCurrentText(INI_File->value("Serial_Number").toString());
+       ui->Serial_Number2->setCurrentText(INI_File->value("Serial_Number2").toString());
+       ui->Serial_Number3->setCurrentText(INI_File->value("Serial_Number3").toString());
+       ui->Baud_rate->setValue(INI_File->value("Baud_rate").toDouble());
+        ui->Baud_rate_2->setValue(INI_File->value("Baud_rate2").toDouble());
+        ui->Baud_rate_3->setValue(INI_File->value("Baud_rate3").toDouble());
+
+
+
     ui->Serial_Num->setCurrentText(INI_File->value(QString::number(1)+"/serialNumber").toString());
     ui->BoardNum->setCurrentText(INI_File->value(QString::number(1)+"/boardNumber").toString());
     INI_File->beginGroup(ui->BoardNum->currentText());
@@ -3451,8 +3460,6 @@ void DataSetting::Read_inifile()
     INI_File->endGroup();
     INI_File->destroyed();
     qDebug()<<QTime::currentTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-
-qDebug()<<"执行到6";
     MotorBoard.clear();
     map_BoardPos.clear();
 
@@ -3486,7 +3493,6 @@ qDebug()<<"执行到6";
     aaa.append(Motor::RES13);
     aaa.append(Motor::RES14);
     aaa.append(Motor::RES15);
-qDebug()<<"执行到7";
     uchar boardIndex = ui->BoardNum->currentIndex();
     uchar boardIndex1 = ui->BoardNum_2->currentIndex();
     uchar boardIndex2 = ui->BoardNum_3->currentIndex();
@@ -3495,26 +3501,19 @@ qDebug()<<"执行到7";
     QMap<Motor, uchar> pos2;
     QMap<Motor, uchar> pos3;
 
-    qDebug()<<"执行到8";
-  for(int i=0; i<24; ++i)
+    for(int i=0; i<24; ++i)
     {
-        qDebug()<<"执行到8-1";
-
         if("伺服电机板" == list_CBB.at(i)->currentText())
         {
-            qDebug()<<"执行到8-2";
             if(i<8)
             {
-                qDebug()<<"执行到8-3";
                 if(sss.isEmpty())
                 {
-                    qDebug()<<"执行到8-4";
                     return;
                 }
                 Motor  kind = sss.takeFirst();
                 MotorBoard.insert(kind, boardIndex);
                 pos.insert(kind, i);
-qDebug()<<"执行到8-5";
                 kind = sss.takeFirst();
                 MotorBoard.insert(kind, boardIndex);
                 pos.insert(kind, i);
@@ -3550,7 +3549,6 @@ qDebug()<<"执行到8-5";
 
 
         }else if("温敏板" == list_CBB.at(i)->currentText()){
-          qDebug()<<"执行到8-10";
             if(i<8)
             {
                 if(aaa.isEmpty())
@@ -3634,7 +3632,6 @@ qDebug()<<"执行到8-5";
 
 
         }else if("LIN电机板" == list_CBB.at(i)->currentText()){
-            qDebug()<<"执行到8-11";
             if(i<8)
             {
                 MotorBoard.insert(Motor::LIN1, boardIndex);
@@ -3653,7 +3650,6 @@ qDebug()<<"执行到8-5";
 
 
         }else if("鼓风机板" == list_CBB.at(i)->currentText()){
-             qDebug()<<"执行到8-12";
             if(i<8)
             {
                 MotorBoard.insert(Motor::Blower, boardIndex);
@@ -3673,7 +3669,6 @@ qDebug()<<"执行到8-5";
 
         }
     }
-    qDebug()<<"执行到9";
     map_BoardPos.insert(ui->BoardNum->currentIndex(), pos);
     map_BoardPos.insert(ui->BoardNum_2->currentIndex(), pos2);
     map_BoardPos.insert(ui->BoardNum_3->currentIndex(), pos3);
@@ -4506,8 +4501,8 @@ void DataSetting::on_SaveSequenceData_clicked()
 {
     //-----------------------------检测顺序--------------------------------
     QString path = QApplication::applicationDirPath() + "/HVAC/HVAC_Equence_Data.ini";
-    QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
-    INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
+    QSettings *SetEquenceINI_File = new QSettings(path, QSettings::IniFormat);
+    SetEquenceINI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
 
     auto temp = QMessageBox::information(this,"提示","是否保存参数",QMessageBox::Yes | QMessageBox::No);
     if(temp == QMessageBox::Yes)
@@ -4521,7 +4516,7 @@ void DataSetting::on_SaveSequenceData_clicked()
         for (int i = 0; i < EquenceWidgets.count(); ++i) {
             EquenceList <<QString::number(EquenceWidgets[i]->value());
         }
-        INI_File->setValue(PD+"/Equence",EquenceList.join(','));//记录顺序
+        SetEquenceINI_File->setValue(PD+"/Equence",EquenceList.join(','));//记录顺序
     }
 }
 
@@ -4680,6 +4675,15 @@ void DataSetting::on_Save_configuration_clicked()
     QString path = QApplication::applicationDirPath() + "/HVAC/SettingData.ini";
     QSettings *INI_File = new QSettings(path, QSettings::IniFormat);
     INI_File->setIniCodec(QTextCodec::codecForName("GB2312"));
+
+    INI_File->setValue("Serial_Number", ui->Serial_Number->currentText());
+    INI_File->setValue("Serial_Number2", ui->Serial_Number2->currentText());
+    INI_File->setValue("Serial_Number3", ui->Serial_Number3->currentText());
+    INI_File->setValue("Baud_rate", ui->Baud_rate->value());
+    INI_File->setValue("Baud_rate2", ui->Baud_rate_2->value());
+    INI_File->setValue("Baud_rate3", ui->Baud_rate_3->value());
+
+
 
     INI_File->beginGroup(ui->BoardNum->currentText());
     INI_File->setValue("serialNumber", ui->Serial_Num->currentText());
